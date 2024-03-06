@@ -1,0 +1,39 @@
+import { NavLink } from "react-router-dom"
+import "./Header.scss"
+
+const Header = () => {
+  return (
+    <header>
+      <nav className="nav">
+        <div className="container nav__container">
+          <div className="nav__logo">
+            <h3>MyBox</h3>
+          </div>
+          <div className="nav__search">
+            <input type="text" className="nav__search__tbx" placeholder="searching..." />
+          </div>
+          <ul className="nav__menu">
+            <li className="nav__item">
+              <NavLink to="/" className="nav__link">Home</NavLink>
+            </li>
+            <li className="nav__item">
+              <NavLink to="/about" className="nav__link">About</NavLink>
+            </li>
+            <li className="nav__item">
+              <NavLink to="/allcollections" className="nav__link">Collections</NavLink>
+            </li>
+            <li className="nav__item">
+              <NavLink className="nav__btn" to="/auth/login">Login</NavLink>
+            </li>
+            <li className="nav__item">
+              <NavLink className="nav__btn" to="/auth/register">Register</NavLink>
+            </li>
+
+          </ul>
+        </div>
+      </nav>
+    </header>
+  )
+}
+
+export default Header
