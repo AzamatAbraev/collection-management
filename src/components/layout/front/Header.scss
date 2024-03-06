@@ -3,7 +3,9 @@ header {
   top: 0;
   left: 0;
   right: 0;
-  background-color: #050505;
+  background-color: #86c0ed;
+  z-index: 10;
+  border-bottom: 2px solid #4aa9f1;
 }
 
 .nav {
@@ -14,9 +16,9 @@ header {
   }
 
   &__logo {
-    h3 {
+    a {
       font-size: 24px;
-      color: #fff;
+      color: #050505;
     }
   }
 
@@ -42,7 +44,7 @@ header {
   }
 
   &__link {
-    color: #fff;
+    color: #050505;
     font-size: 18px;
   }
 

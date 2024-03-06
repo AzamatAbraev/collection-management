@@ -16,6 +16,9 @@ import CollectionPage from "./pages/user/collection"
 import ItemPage from "./pages/user/item"
 import NotFoundPage from "./pages/not-found"
 
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 function App() {
   return (
     <BrowserRouter>
@@ -31,11 +34,9 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/contact" element={<ContactPage />} />
-        </Route>
-        <Route path="/user">
           <Route path="/user/dashboard" element={<UserDashboard />} />
-          <Route path="/user/collection/:collectionId" element={<CollectionPage />} />
-          <Route path="/user/collection/:collectionId/:itemId/" element={<ItemPage />} />
+          <Route path="/collection/:collectionId" element={<CollectionPage />} />
+          <Route path="/collection/:collectionId/:itemId/" element={<ItemPage />} />
         </Route>
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="/admin" element={<AdminDashboard />} />
