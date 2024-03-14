@@ -11,16 +11,21 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.1",
+    "@types/js-cookie": "^3.0.6",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-slick": "^0.23.13",
-    "antd": "^5.15.0",
+    "antd": "^5.15.2",
     "axios": "^1.6.7",
+    "formik": "^2.4.5",
+    "js-cookie": "^3.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.2",
     "react-slick": "^0.30.2",
     "sass": "^1.71.1",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "yup": "^1.4.0",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.56",

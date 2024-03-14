@@ -1,0 +1,100 @@
+@use "../../../general-styles/Variables.scss" as vrb;
+
+.login__main {
+  padding: 50px 0px;
+  border-radius: 16px;
+}
+
+.login-page {
+  background-color: vrb.$main;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 62px) !important;
+}
+
+.login__header {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-bottom: 20px;
+
+  h2 {
+    color: #000;
+    text-align: center;
+    font-size: 64px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+
+  p {
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+
+  a {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: normal;
+  }
+}
+
+.login__form {
+  width: 600px;
+  .error-message {
+    min-height: 10px;
+    color: #f00;
+    font-size: 14px;
+    margin-top: 4px;
+    visibility: hidden;
+  }
+
+  .error-message.active {
+    visibility: visible;
+  }
+
+  input {
+    width: 100%;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    padding: 12px 20px;
+    border: none;
+  }
+}
+
+.login__btn {
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  text-transform: capitalize;
+  border-radius: 10px;
+  background: #1875bc;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.3);
+  border: none;
+  width: 100%;
+  padding: 13px;
+}
+
+@media (max-width: 650px) {
+  .login__form {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 500px) {
+  .login__header {
+    h2 {
+      font-size: 44px;
+    }
+  }
+}

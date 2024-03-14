@@ -23,10 +23,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/auth">
-          <Route path="/auth/login" element={<LoginPage />} />
-          <Route path="/auth/register" element={<RegisterPage />} />
-        </Route>
         <Route element={<FrontLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
