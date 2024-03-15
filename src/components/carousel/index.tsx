@@ -3,6 +3,9 @@ import Slider from "react-slick";
 import ItemCard from "../card/ItemCard";
 
 import "./style.scss"
+import { useEffect } from "react";
+import useItems from "../../store/items";
+
 
 function Responsive() {
   const settings = {
@@ -42,39 +45,20 @@ function Responsive() {
     ]
   };
 
+  const { latestItems, getLatestItems } = useItems()
+
+
+
+  useEffect(() => {
+    getLatestItems()
+  }, [getLatestItems])
+
   return (
     <div className="slider-container container">
       <Slider {...settings}>
-        <div className="slide-wrapper">
-          <ItemCard />
-        </div>
-        <div className="slide-wrapper">
-          <ItemCard />
-        </div>
-        <div className="slide-wrapper">
-          <ItemCard />
-        </div>
-        <div className="slide-wrapper">
-          <ItemCard />
-        </div>
-        <div className="slide-wrapper">
-          <ItemCard />
-        </div>
-        <div className="slide-wrapper">
-          <ItemCard />
-        </div>
-        <div className="slide-wrapper">
-          <ItemCard />
-        </div>
-        <div className="slide-wrapper">
-          <ItemCard />
-        </div>
-        <div className="slide-wrapper">
-          <ItemCard />
-        </div>
-        <div className="slide-wrapper">
-          <ItemCard />
-        </div>
+        {latestItems?.map((item) => <div key={item._id} className="slide-wrapper">
+          <ItemCard {...item} />
+        </div>)}
       </Slider>
     </div>
   );

@@ -4,7 +4,7 @@ import { TOKEN } from "../constants";
 import { message } from "antd";
 
 const request = axios.create({
-  baseURL: "http://localhost:3000/api/v1/",
+  baseURL: "https://collection-management-server.up.railway.app/api/v1/",
   timeout: 10000,
   headers: { Authorization: `Bearer ${Cookies.get(TOKEN)}` },
 });

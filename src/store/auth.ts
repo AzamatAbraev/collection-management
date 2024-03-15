@@ -30,7 +30,7 @@ const useAuth = create<AuthType>()((set) => ({
       request.defaults.headers.Authorization = `Bearer ${token}`;
 
       message.success("You are logged in");
-      navigate("/dashboard");
+      navigate("/");
     } finally {
       set({ loading: false });
     }
