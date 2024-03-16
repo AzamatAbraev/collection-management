@@ -5,6 +5,7 @@ import ItemCard from "../card/ItemCard";
 import "./style.scss"
 import { useEffect } from "react";
 import useItems from "../../store/items";
+import { Skeleton } from "antd";
 
 
 function Responsive() {
@@ -45,7 +46,7 @@ function Responsive() {
     ]
   };
 
-  const { latestItems, getLatestItems } = useItems()
+  const { latestItems, loading, getLatestItems, } = useItems()
 
 
 
@@ -57,7 +58,7 @@ function Responsive() {
     <div className="slider-container container">
       <Slider {...settings}>
         {latestItems?.map((item) => <div key={item._id} className="slide-wrapper">
-          <ItemCard {...item} />
+          <Skeleton loading={loading}><ItemCard {...item} /></Skeleton>
         </div>)}
       </Slider>
     </div>

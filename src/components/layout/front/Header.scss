@@ -59,3 +59,10 @@ header {
 .active {
   color: red;
 }
+
+@media (max-width: 1000px) {
+  .home__link,
+  .about__link {
+    display: none;
+  }
+}

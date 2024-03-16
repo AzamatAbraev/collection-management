@@ -19,7 +19,11 @@ import NotFoundPage from "./pages/not-found"
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+import useAuth from "./store/auth"
+import AccountPage from "./pages/auth/account"
+
 function App() {
+  const { isAuthenticated, role } = useAuth();
   return (
     <BrowserRouter>
       <Routes>
@@ -29,12 +33,13 @@ function App() {
           <Route path="/allcollections" element={<AllCollections />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/account" element={<AccountPage />} />
           <Route path="/contact" element={<ContactPage />} />
-          <Route path="/user/dashboard" element={<UserDashboard />} />
+          <Route path="/user/dashboard" element={isAuthenticated ? <UserDashboard /> : <NotFoundPage />} />
           <Route path="/collection/:collectionId" element={<CollectionPage />} />
           <Route path="/collection/:collectionId/:itemId/" element={<ItemPage />} />
         </Route>
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin" element={isAuthenticated && role === "admin" ? <AdminLayout /> : <NotFoundPage />}>
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/collections" element={<AdminCollections />} />
           <Route path="/admin/users" element={<AdminUsers />} />

@@ -1,3 +1,4 @@
+@use "../../general-styles/Variables.scss" as vrb;
 .card {
   padding: 20px 10px;
   background-color: #dceaf5;
@@ -88,5 +89,33 @@
     font-size: 20px;
     border-radius: 10px;
     border: 1px solid #64ade4;
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 30px;
+    background-color: vrb.$secondary;
+    border-radius: 10px;
+    &__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    &__btn {
+      margin-top: 20px;
+      width: 100%;
+      padding: 8px 16px;
+      font-size: 16px;
+      text-align: center;
+      background-color: #2379bc;
+      color: #fff;
+      border-radius: 10px;
+      box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+        rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+    }
   }
 }

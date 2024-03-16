@@ -4,10 +4,12 @@ import request from "../server/index";
 import Cookies from "js-cookie";
 import { NavigateFunction } from "react-router-dom";
 import { LoginType, RegisterType } from "../types/auth";
-import { TOKEN, USER_DATA } from "../constants";
+import { TOKEN, USER_DATA, USER_ROLE } from "../constants";
 
 interface AuthType {
   isAuthenticated: boolean;
+  user: { name: string; role: string; userId: string };
+  role: string;
   loading: boolean;
   login: (values: LoginType, navigate: NavigateFunction) => void;
   register: (values: RegisterType, navigate: NavigateFunction) => void;
@@ -17,15 +19,18 @@ interface AuthType {
 const useAuth = create<AuthType>()((set) => ({
   isAuthenticated: Boolean(Cookies.get("TOKEN")),
   loading: false,
+  user: JSON.parse(localStorage.getItem(USER_DATA) || "{}"),
 
+  role: Cookies.get(USER_ROLE) || "",
   login: async (values, navigate) => {
     set({ loading: true });
     try {
       const {
         data: { token, user },
       } = await request.post("auth/login", values);
-      set({ isAuthenticated: true });
-      Cookies.set("TOKEN", token);
+      set({ isAuthenticated: true, role: user.role, user: user });
+      Cookies.set(TOKEN, token);
+      Cookies.set(USER_ROLE, user.role);
       localStorage.setItem(USER_DATA, JSON.stringify(user));
       request.defaults.headers.Authorization = `Bearer ${token}`;
 
@@ -53,7 +58,8 @@ const useAuth = create<AuthType>()((set) => ({
   },
 
   logout: (navigate) => {
-    Cookies.remove("TOKEN");
+    Cookies.remove(TOKEN);
+    Cookies.remove(USER_ROLE);
     localStorage.removeItem(USER_DATA);
     delete request.defaults.headers.Authorization;
     set({ isAuthenticated: false });

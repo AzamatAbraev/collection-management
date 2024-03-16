@@ -1,30 +1,32 @@
-import { Fragment } from "react/jsx-runtime";
-import "./style.scss";
-import HomeCarousel from "../../../components/carousel";
-import CollectionCard from "../../../components/card/CollectionCard";
-import useCollection from "../../../store/collections";
 import { useEffect } from "react";
+import { Fragment } from "react/jsx-runtime";
+
+import HomeCarousel from "../../../components/carousel";
+import useCollection from "../../../store/collections";
+import LoadingPage from "../../loading";
+import CollectionListCard from "../../../components/card/CollectionListCard";
+
+import "./style.scss";
 
 const HomePage = () => {
-  const { collections, getAllCollections } = useCollection();
+  const { collections, loading, getAllCollections } = useCollection();
 
   useEffect(() => {
     getAllCollections()
   }, [getAllCollections])
 
-  console.log(collections);
-
-
   return (
     <Fragment>
-      <section id="latest">
+      {loading ? <LoadingPage /> : <section id="latest">
         <div className="container">
+          <h1 className="home__title">Latest Items</h1>
           <HomeCarousel />
-          {collections?.map((collection) => <CollectionCard key={collection._id} {...collection} />)}
+          <h1 className="home__title">Collections</h1>
+          <div className="collections__row">
+            {collections?.map((collection) => <CollectionListCard key={collection._id} {...collection} />)}
+          </div>
         </div>
-      </section>
-      <section id="largest"></section>
-      <section id="categories"></section>
+      </section>}
     </Fragment>
   )
 }

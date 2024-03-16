@@ -1,0 +1,59 @@
+.user {
+  padding-top: 50px;
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background-color: #86c0ed;
+    border: 2px solid #2975b0;
+    font-weight: 500;
+    border-radius: 6px;
+  }
+
+  &__name {
+    font-size: 20px;
+    font-weight: 500;
+    color: #0d205e;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  &__dashboard__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.add__btn,
+.user__btn {
+  padding: 8px 16px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  border-radius: 6px;
+
+  background-color: #86c0ed;
+  border: 2px solid #2975b0;
+  color: #0d205e;
+}
+
+.user__dashboard {
+  &__body {
+    padding-top: 50px;
+  }
+}
+
+.user__dashboard__row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: center;
+}

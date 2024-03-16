@@ -14,7 +14,7 @@ request.interceptors.response.use(
     return response;
   },
   (err) => {
-    message.error(err.response.data.msg);
+    message.error(err.response.data.message);
     return Promise.reject(err);
   },
 );

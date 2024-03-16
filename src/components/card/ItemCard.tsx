@@ -12,7 +12,7 @@ const ItemCard = (item: ItemType) => {
   const [liked, setLiked] = useState(false);
   const [commented, setCommented] = useState(false);
   const [collectionName, setCollectionName] = useState("");
-  const [author, setAuthor] = useState("")
+  const [author, setAuthor] = useState("");
 
 
   useEffect(() => {
