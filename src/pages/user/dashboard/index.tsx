@@ -1,9 +1,8 @@
-
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { Form, Input, Modal, Skeleton, message } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import useCollection from "../../../store/collections";
 import TextArea from "antd/es/input/TextArea";
@@ -17,6 +16,8 @@ import userIcon from "../../../assets/user-icon.svg"
 
 import "./style.scss";
 import LoadingPage from "../../loading";
+import { useQuery, useQueryClient } from "react-query";
+import CollectionType from "../../../types/collection";
 
 
 const UserDashboard = () => {
@@ -26,12 +27,25 @@ const UserDashboard = () => {
 
   const [form] = Form.useForm()
 
+  const queryClient = useQueryClient();
+
   const navigate = useNavigate();
-  const { loading, userCollections, getUserCollections, addCollection, deleteCollection, updateCollection } = useCollection();
-  const { user } = useAuth();
+  const { addCollection, deleteCollection, updateCollection } = useCollection();
+  const { user, role } = useAuth();
+
+
+  const fetchCollections = async () => {
+    const { data } = await request.get("collections/user");
+    return data;
+  }
+
+
+  const { data: userCollections, isLoading } = useQuery("userCollections", fetchCollections)
+
 
   const showModal = () => {
     form.resetFields();
+    form.setFieldsValue({ tags: [''] });
     setOpen(true)
   }
 
@@ -45,6 +59,7 @@ const UserDashboard = () => {
       } else {
         await updateCollection(values, selected)
       }
+      queryClient.invalidateQueries('userCollections');
       setOpen(false);
       setSelected(null);
     } catch (error) {
@@ -61,6 +76,7 @@ const UserDashboard = () => {
     try {
       await request.delete(`collections/by-collection/${collectionId}`);
       await deleteCollection(collectionId);
+      queryClient.invalidateQueries('userCollections');
       message.success("Collection and all items deleted successfully.");
     } catch (error) {
       message.error("Failed to delete collection and items.");
@@ -81,18 +97,14 @@ const UserDashboard = () => {
     }
   }
 
-
-  useEffect(() => {
-    getUserCollections()
-  }, [getUserCollections])
-
   return (
     <section className="user">
-      {loading ? <LoadingPage /> : <div className="container user__dashboard">
+      {isLoading ? <LoadingPage /> : <div className="container user__dashboard">
         <div className="user__dashboard__header">
           <div className="user__logo">
             <img src={userIcon} alt="User Icon" />
             <p className="user__name">{user.name}</p>
+            <span style={{ color: "red" }} className="user__name">({role})</span>
           </div>
           <div className="user__controls">
             <button onClick={() => navigate("/account")} className="user__btn"><img src={settingsIcon} />Settings</button>
@@ -100,7 +112,7 @@ const UserDashboard = () => {
           </div>
         </div>
         <div className="user__dashboard__body">
-          {userCollections?.map((collection) => <div key={collection._id} className="collection__card">
+          {userCollections?.map((collection: CollectionType) => <div key={collection._id} className="collection__card">
             <div className="collection__card__row">
               <h3>{collection.name}</h3>
               <p>{collection.category}</p>
@@ -129,7 +141,7 @@ const UserDashboard = () => {
         open={open}
         onOk={handleOk}
         okText={selected ? "Edit" : "Add"}
-        confirmLoading={loading}
+        confirmLoading={isLoading}
         onCancel={handleCancel}
       >
         <Skeleton loading={isEditLoading}>
@@ -140,7 +152,6 @@ const UserDashboard = () => {
             form={form}
             style={{ maxWidth: 700 }}
             initialValues={{}}
-            size="large"
             autoComplete="off"
           >
             <Form.Item

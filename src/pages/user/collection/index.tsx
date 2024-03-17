@@ -23,12 +23,12 @@ const CollectionPage = () => {
   const [selected, setSelected] = useState<null | string>(null)
   const [isEditLoading, setIsEditLoading] = useState(false);
   const [refetch, setRefetch] = useState(false)
-
+  const [authorId, setAuthorId] = useState("");
 
   const [form] = Form.useForm();
 
   const { collectionId } = useParams();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, role, user } = useAuth();
   const { collectionItems, loading, addItem, deleteItem, updateItem, getItemsByCollection } = useItems()
 
   const showModal = () => {
@@ -92,6 +92,7 @@ const CollectionPage = () => {
         setDataLoading(true)
         const { data } = await request.get(`collections/${collectionId}`)
         setCollectionName(data.name);
+        setAuthorId(data.userId)
       } finally {
         setDataLoading(false)
       }
@@ -131,16 +132,26 @@ const CollectionPage = () => {
                   {item?.tags.map((tag) => <p key={tag}>#{tag}</p>)}
                 </div>
                 <div className="card__controls">
-                  <button onClick={() => handleEdit(item?._id)} className="delete__btn">Edit</button>
-                  <button onClick={() =>
-                    Modal.confirm({
-                      title: "Are you sure you want to delete this item?",
-                      async onOk() {
-                        await handleDelete(item._id);
-                      },
-                    })
-                  } className="edit__btn">Delete</button>
+                  {isAuthenticated && (role === 'admin' || authorId === user.userId) && (
+                    <>
+                      <button onClick={() => handleEdit(item?._id)} className="delete__btn">Edit</button>
+                      <button
+                        onClick={() =>
+                          Modal.confirm({
+                            title: "Are you sure you want to delete this item?",
+                            async onOk() {
+                              await handleDelete(item._id);
+                            },
+                          })
+                        }
+                        className="edit__btn"
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
                 </div>
+
               </Skeleton>
             </div>
           )}
@@ -164,7 +175,7 @@ const CollectionPage = () => {
             wrapperCol={{ span: 24 }}
             form={form}
             style={{ maxWidth: 700 }}
-            initialValues={{}}
+            initialValues={{ tags: [''] }}
             autoComplete="off"
           >
             <Form.Item
