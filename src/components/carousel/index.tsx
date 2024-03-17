@@ -3,10 +3,15 @@ import Slider from "react-slick";
 import ItemCard from "../card/ItemCard";
 
 import "./style.scss"
-import { useEffect } from "react";
-import useItems from "../../store/items";
 import { Skeleton } from "antd";
+import request from "../../server";
+import { useQuery } from "react-query";
+import ItemType from "../../types/item";
 
+const fetchLatestItems = async () => {
+  const { data } = await request.get("items/latest");
+  return data;
+};
 
 function Responsive() {
   const settings = {
@@ -46,19 +51,13 @@ function Responsive() {
     ]
   };
 
-  const { latestItems, loading, getLatestItems, } = useItems()
-
-
-
-  useEffect(() => {
-    getLatestItems()
-  }, [getLatestItems])
+  const { data: latestItems, isLoading } = useQuery('latestItems', fetchLatestItems);
 
   return (
     <div className="slider-container container">
       <Slider {...settings}>
-        {latestItems?.map((item) => <div key={item._id} className="slide-wrapper">
-          <Skeleton loading={loading}><ItemCard {...item} /></Skeleton>
+        {latestItems?.map((item: ItemType) => <div key={item._id} className="slide-wrapper">
+          <Skeleton loading={isLoading}><ItemCard {...item} /></Skeleton>
         </div>)}
       </Slider>
     </div>

@@ -1,8 +1,11 @@
+import './style.scss'; 
 
 const LoadingPage = () => {
   return (
-    <div>LoadingPage</div>
-  )
-}
+    <div className="loading-page">
+      <div className="loading-spinner"></div>
+    </div>
+  );
+};
 
-export default LoadingPage
+export default LoadingPage;

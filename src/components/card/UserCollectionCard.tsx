@@ -1,17 +1,20 @@
 import { Link } from "react-router-dom";
 import { Modal, message } from "antd";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 import useCollection from "../../store/collections";
 import CollectionType from "../../types/collection";
 import convertTime from "../../utils/convertTime";
 import request from "../../server";
 
+import readmoreIcon from "../../assets/read-more.svg"
+
 import "./style.scss";
 
 const UserCollectionCard = (collection: CollectionType) => {
   const { deleteCollection } = useCollection();
 
-  const handleDeleteProcess = async (collectionId: string) => {
+  const handleDelete = async (collectionId: string) => {
     try {
       await request.delete(`collections/by-collection/${collectionId}`);
       await deleteCollection(collectionId);
@@ -20,6 +23,7 @@ const UserCollectionCard = (collection: CollectionType) => {
       message.error("Failed to delete collection and items.");
     }
   };
+
 
   return (
     <div className="collection__card">
@@ -32,16 +36,16 @@ const UserCollectionCard = (collection: CollectionType) => {
         <p>{convertTime(collection.createdAt)}</p>
       </div>
       <div className="collection__card__footer">
-        <button>Edit</button>
-        <button onClick={() =>
+        <button className="edit__btn"><EditOutlined style={{ fontSize: "20px" }} /></button>
+        <button className="delete__btn" onClick={() =>
           Modal.confirm({
             title: "Are you sure you want to delete this collection and all its items?",
             async onOk() {
-              await handleDeleteProcess(collection._id);
+              await handleDelete(collection._id);
             },
           })
-        }>Delete</button>
-        <Link to={`/collection/${collection._id}`} className="collection__card__btn">See Items</Link>
+        }><DeleteOutlined style={{ fontSize: "20px" }} /></button>
+        <Link to={`/collection/${collection._id}`} className="collection__card__btn"><img src={readmoreIcon} alt="Read More" /></Link>
       </div>
     </div>
   );

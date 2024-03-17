@@ -13,6 +13,7 @@ interface CollectionStoreType {
   loading: boolean;
   collections: CollectionType[];
   userCollections: CollectionType[];
+  setCollections: (collections: CollectionType[]) => void;
   getAllCollections: () => void;
   getUserCollections: () => void;
   addCollection: (values: {
@@ -21,7 +22,7 @@ interface CollectionStoreType {
     category: string;
     userId: string;
   }) => void;
-  updateCollection: (values: ValuesType, id: string) => void;
+  updateCollection: (values: ValuesType, id: string | null) => void;
   deleteCollection: (id: string) => void;
 }
 
@@ -29,6 +30,7 @@ const useCollection = create<CollectionStoreType>()((set, get) => ({
   loading: false,
   collections: [],
   userCollections: [],
+  setCollections: (collections) => set({ collections }),
   getAllCollections: async () => {
     try {
       set({ loading: true });
@@ -60,7 +62,7 @@ const useCollection = create<CollectionStoreType>()((set, get) => ({
   updateCollection: async (values, id) => {
     try {
       set({ loading: true });
-      await request.patch(`collections/${id}`, { values });
+      await request.patch(`collections/${id}`, values);
       await get().getUserCollections();
       message.success("Collection updated successfully");
     } finally {

@@ -1,29 +1,33 @@
-import useAuth from "../../../store/auth";
 
-
-import userIcon from "../../../assets/user-icon.svg"
-import settingsIcon from "../../../assets/settins-icon.svg"
-
-import "./style.scss";
-import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { Form, Input, Modal, message } from "antd";
+import { Link } from "react-router-dom";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { Form, Input, Modal, Skeleton, message } from "antd";
 import { useEffect, useState } from "react";
+
 import useCollection from "../../../store/collections";
 import TextArea from "antd/es/input/TextArea";
 import LoadingPage from "../../loading";
-import UserCollectionCard from "../../../components/card/UserCollectionCard";
+import useAuth from "../../../store/auth";
+import convertTime from "../../../utils/convertTime";
+import request from "../../../server";
+
+import readmoreIcon from "../../../assets/read-more.svg"
+import settingsIcon from "../../../assets/settins-icon.svg"
+import userIcon from "../../../assets/user-icon.svg"
+
+import "./style.scss";
 
 const UserDashboard = () => {
   const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState<null | string>(null)
+  const [isEditLoading, setIsEditLoading] = useState(false);
+
   const [form] = Form.useForm()
 
-
-
   const navigate = useNavigate();
-  const { loading, userCollections, getUserCollections, addCollection } = useCollection();
+  const { loading, userCollections, getUserCollections, addCollection, deleteCollection, updateCollection } = useCollection();
   const { user } = useAuth();
-
 
   const showModal = () => {
     form.resetFields();
@@ -33,9 +37,15 @@ const UserDashboard = () => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
-      values.userId = user.userId;
-      await addCollection(values);
+
+      if (!selected) {
+        values.userId = user.userId;
+        await addCollection(values);
+      } else {
+        await updateCollection(values, selected)
+      }
       setOpen(false);
+      setSelected(null);
     } catch (error) {
       message.error("Submission failed")
     }
@@ -43,7 +53,33 @@ const UserDashboard = () => {
 
   const handleCancel = () => {
     setOpen(false);
+    setSelected(null);
   };
+
+  const handleDelete = async (collectionId: string) => {
+    try {
+      await request.delete(`collections/by-collection/${collectionId}`);
+      await deleteCollection(collectionId);
+      message.success("Collection and all items deleted successfully.");
+    } catch (error) {
+      message.error("Failed to delete collection and items.");
+    }
+  };
+
+  const handleEdit = async (collectionId: string) => {
+    try {
+      setOpen(true);
+      setIsEditLoading(true);
+      setSelected(collectionId);
+      const { data } = await request.get(`collections/${collectionId}`);
+      form.setFieldsValue(data)
+    } catch (error) {
+      message.error("Update failed");
+    } finally {
+      setIsEditLoading(false)
+    }
+  }
+
 
   useEffect(() => {
     getUserCollections()
@@ -63,51 +99,72 @@ const UserDashboard = () => {
           </div>
         </div>
         <div className="user__dashboard__body">
-          {userCollections.length > 0 ? <div className="user__dashboard__row">
-            {userCollections?.map((collection) => <UserCollectionCard key={collection?._id} {...collection} />)}
-          </div> : <p>No Collection found</p>}
+          {userCollections?.map((collection) => <div key={collection._id} className="collection__card">
+            <div className="collection__card__row">
+              <h3>{collection.name}</h3>
+              <p>{collection.category}</p>
+            </div>
+            <div className="collection__card__row">
+              <p>{collection.description}</p>
+              <p>{convertTime(collection.createdAt)}</p>
+            </div>
+            <div className="collection__card__footer">
+              <button disabled={isEditLoading} className="edit__btn" onClick={() => handleEdit(collection?._id)}><EditOutlined style={{ fontSize: "20px" }} /></button>
+              <button className="delete__btn" onClick={() =>
+                Modal.confirm({
+                  title: "Are you sure you want to delete this collection and all its items?",
+                  async onOk() {
+                    await handleDelete(collection._id);
+                  },
+                })
+              }><DeleteOutlined style={{ fontSize: "20px" }} /></button>
+              <Link to={`/collection/${collection._id}`} className="collection__card__btn"><img src={readmoreIcon} alt="Read More" /></Link>
+            </div>
+          </div>)}
         </div>
       </div>}
       <Modal
-        title="Create a new collection"
+        title={selected ? "Edit Collection" : "Create Collection"}
         open={open}
         onOk={handleOk}
-        okText="Add Collection"
+        okText={selected ? "Edit" : "Add"}
         confirmLoading={loading}
         onCancel={handleCancel}
       >
-        <Form
-          name="New Collection"
-          labelCol={{ span: 24 }}
-          wrapperCol={{ span: 24 }}
-          form={form}
-          style={{ maxWidth: 700 }}
-          initialValues={{}}
-          size="large"
-          autoComplete="off"
-        >
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[{ required: true, message: 'Please provide collection name' }]}
+        <Skeleton loading={isEditLoading}>
+          <Form
+            name="New Collection"
+            labelCol={{ span: 24 }}
+            wrapperCol={{ span: 24 }}
+            form={form}
+            style={{ maxWidth: 700 }}
+            initialValues={{}}
+            size="large"
+            autoComplete="off"
           >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Category"
-            name="category"
-            rules={[{ required: true, message: 'Please include category.' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Description"
-            name="description"
-            rules={[{ required: true, message: 'Please describe your collection.' }]}
-          >
-            <TextArea />
-          </Form.Item>
-        </Form>
+            <Form.Item
+              label="Name"
+              name="name"
+              rules={[{ required: true, message: 'Please provide collection name' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Category"
+              name="category"
+              rules={[{ required: true, message: 'Please include category.' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Description"
+              name="description"
+              rules={[{ required: true, message: 'Please describe your collection.' }]}
+            >
+              <TextArea />
+            </Form.Item>
+          </Form>
+        </Skeleton>
       </Modal>
     </section>
   )

@@ -106,8 +106,6 @@
     }
 
     &__btn {
-      margin-top: 20px;
-      width: 100%;
       padding: 8px 16px;
       font-size: 16px;
       text-align: center;
@@ -116,6 +114,25 @@
       border-radius: 10px;
       box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
         rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+
+    }
+
+    &__footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
   }
+}
+
+.edit__btn,
+.delete__btn {
+  font-size: 16px;
+  background-color: #2379bc;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
 }
