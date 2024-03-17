@@ -10,10 +10,13 @@ interface ValuesType {
 }
 
 interface CollectionStoreType {
+  total: number;
+  userTotal: number;
   loading: boolean;
   collections: CollectionType[];
   userCollections: CollectionType[];
   setCollections: (collections: CollectionType[]) => void;
+  setUserCollections: (collections: CollectionType[]) => void;
   getAllCollections: () => void;
   getUserCollections: () => void;
   addCollection: (values: {
@@ -27,15 +30,18 @@ interface CollectionStoreType {
 }
 
 const useCollection = create<CollectionStoreType>()((set, get) => ({
+  total: 0,
+  userTotal: 0,
   loading: false,
   collections: [],
   userCollections: [],
   setCollections: (collections) => set({ collections }),
+  setUserCollections: (collections) => set({ collections }),
   getAllCollections: async () => {
     try {
       set({ loading: true });
       const { data } = await request.get("collections");
-      set({ collections: data });
+      set({ collections: data, total: data.length });
     } finally {
       set({ loading: false });
     }
@@ -44,7 +50,7 @@ const useCollection = create<CollectionStoreType>()((set, get) => ({
     try {
       set({ loading: true });
       const { data } = await request.get("collections/user");
-      set({ userCollections: data });
+      set({ userCollections: data, userTotal: data.length });
     } finally {
       set({ loading: false });
     }

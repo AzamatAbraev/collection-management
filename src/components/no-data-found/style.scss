@@ -1,0 +1,16 @@
+@use "../../general-styles/Variables.scss" as vrb;
+
+.no-data-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 200px;
+  border-radius: 8px;
+  padding-bottom: 50px;
+}
+
+.no-data-message {
+  color: #000;
+  font-weight: 500;
+  font-size: 34px;
+}

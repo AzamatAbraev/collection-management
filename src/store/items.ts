@@ -8,10 +8,11 @@ interface ItemsStoreType {
   latestItems: ItemType[];
   collectionItems: ItemType[];
   getAllItems: () => void;
-  getItemsByCollection: (collectionId: string) => void;
+  getItemsByCollection: (collectionId: string | undefined) => void;
   getLatestItems: () => void;
-  addItem: (itemData: ItemType, collectionId: string) => void;
+  addItem: (itemData: ItemType, collectionId: string | undefined) => void;
   updateItem: (itemId: string, updatedData: ItemType) => void;
+  deleteItem: (itemId: string) => void;
 }
 
 const useItems = create<ItemsStoreType>()((set, get) => ({
@@ -59,6 +60,14 @@ const useItems = create<ItemsStoreType>()((set, get) => ({
     try {
       set({ loading: true });
       await request.patch(`items/${itemId}`, updatedData);
+    } finally {
+      set({ loading: false });
+    }
+  },
+  deleteItem: async (itemId) => {
+    try {
+      set({ loading: true });
+      await request.delete(`items/${itemId}`);
     } finally {
       set({ loading: false });
     }

@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 
 import useCollection from "../../../store/collections";
 import TextArea from "antd/es/input/TextArea";
-import LoadingPage from "../../loading";
 import useAuth from "../../../store/auth";
 import convertTime from "../../../utils/convertTime";
 import request from "../../../server";
@@ -17,6 +16,8 @@ import settingsIcon from "../../../assets/settins-icon.svg"
 import userIcon from "../../../assets/user-icon.svg"
 
 import "./style.scss";
+import LoadingPage from "../../loading";
+
 
 const UserDashboard = () => {
   const [open, setOpen] = useState(false);

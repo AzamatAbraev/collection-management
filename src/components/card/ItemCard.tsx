@@ -54,6 +54,9 @@ const ItemCard = (item: ItemType) => {
           <p>{data?.collectionName}</p>
           <p>{data?.author}</p>
         </div>
+        <div className="card__tags">
+          {item?.tags.map((tag) => <p>#{tag}</p>)}
+        </div>
       </Skeleton>
     </div>
   );

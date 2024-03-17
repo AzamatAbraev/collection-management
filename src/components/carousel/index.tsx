@@ -8,11 +8,6 @@ import request from "../../server";
 import { useQuery } from "react-query";
 import ItemType from "../../types/item";
 
-const fetchLatestItems = async () => {
-  const { data } = await request.get("items/latest");
-  return data;
-};
-
 function Responsive() {
   const settings = {
     dots: true,
@@ -49,6 +44,11 @@ function Responsive() {
         }
       }
     ]
+  };
+
+  const fetchLatestItems = async () => {
+    const { data } = await request.get("items/latest");
+    return data;
   };
 
   const { data: latestItems, isLoading } = useQuery('latestItems', fetchLatestItems);

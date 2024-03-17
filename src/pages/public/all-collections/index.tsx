@@ -7,12 +7,14 @@ import { useQuery } from "react-query";
 
 import "./style.scss";
 
-const fetchCollections = async () => {
-  const { data } = await request.get('/collections');
-  return data;
-};
+
 
 const AllCollections = () => {
+
+  const fetchCollections = async () => {
+    const { data } = await request.get('/collections');
+    return data;
+  };
 
   const { data: collections } = useQuery('collections', fetchCollections);
 
