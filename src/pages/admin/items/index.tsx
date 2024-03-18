@@ -5,22 +5,24 @@ import { useQuery } from 'react-query';
 import request from '../../../server';
 import CollectionType from '../../../types/collection';
 import useUsers from '../../../hooks/useUsers';
+import useCollections from '../../../hooks/useCollections';
 
-const AdminCollections = () => {
+const AdminItems = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [form] = Form.useForm();
 
   const { getUserById } = useUsers();
+  const { getCollectionById } = useCollections();
 
-  const fetchCollections = async () => {
-    const { data } = await request.get("collections");
+  const fetchItems = async () => {
+    const { data } = await request.get("items");
     return data;
   };
 
 
   const { data: collections, isLoading: isLoadingCollections } = useQuery(
-    "collections",
-    fetchCollections,
+    "items",
+    fetchItems,
   );
 
   const showModal = () => {
@@ -42,14 +44,17 @@ const AdminCollections = () => {
       key: 'name',
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
+      title: 'Tags',
+      dataIndex: 'tags',
+      key: 'tags',
+      render: (tags: string[]) => tags.join(', '),
     },
     {
-      title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
+      title: 'Collection',
+      dataIndex: 'collectionId',
+      key: 'collectionId',
+      render: (collectionId: string) => <p>{getCollectionById(collectionId)}</p>
+
     },
     {
       title: 'Author',
@@ -76,6 +81,7 @@ const AdminCollections = () => {
         dataSource={collections?.map((collection: CollectionType) => ({ ...collection, key: collection._id }))}
         loading={isLoadingCollections}
         scroll={{ x: 1000 }}
+        pagination={{ pageSize: 7 }}
         bordered
       />
       <Modal
@@ -112,4 +118,4 @@ const AdminCollections = () => {
   );
 };
 
-export default AdminCollections;
+export default AdminItems;
