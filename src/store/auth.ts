@@ -35,7 +35,12 @@ const useAuth = create<AuthType>()((set) => ({
       request.defaults.headers.Authorization = `Bearer ${token}`;
 
       message.success("You are logged in");
-      navigate("/");
+
+      if (user.role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/");
+      }
     } finally {
       set({ loading: false });
     }

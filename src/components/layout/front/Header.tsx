@@ -29,6 +29,7 @@ const Header = () => {
             <li className="nav__item">
               <NavLink className="nav__btn" to={isAuthenticated ? "/user/dashboard" : "login"}>{isAuthenticated ? user?.name : "Login"}</NavLink>
             </li>
+
             {isAuthenticated ? <li className="nav__item">
               <a className="nav__btn" onClick={() => logout(navigate)}>Logout</a>
             </li> : <li className="nav__item">
