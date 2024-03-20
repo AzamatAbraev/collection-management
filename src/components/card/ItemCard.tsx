@@ -36,7 +36,7 @@ const ItemCard = (item: ItemType) => {
   return (
     <div className="card">
       <div className="card__image">
-        <img src={bookImg} alt="Book" />
+        <img src={item.photo || bookImg} alt="Book" />
       </div>
       <div className="card__buttons">
         <button onClick={() => setLiked(!liked)} className="card__btn">

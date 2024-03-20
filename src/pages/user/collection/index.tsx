@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { LikeFilled, LikeOutlined, MessageOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, Skeleton, Space, message } from "antd";
 
@@ -24,6 +24,8 @@ const CollectionPage = () => {
   const [isEditLoading, setIsEditLoading] = useState(false);
   const [refetch, setRefetch] = useState(false)
   const [authorId, setAuthorId] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
 
   const [form] = Form.useForm();
 
@@ -44,6 +46,9 @@ const CollectionPage = () => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
+      if (selectedFile) {
+        values.photo = selectedFile;
+      }
 
       if (!selected) {
         await addItem(values, collectionId);
@@ -55,6 +60,8 @@ const CollectionPage = () => {
       setRefetch(!refetch);
     } catch (error) {
       message.error("Submission failed")
+      console.log(error);
+
     }
   };
 
@@ -84,6 +91,15 @@ const CollectionPage = () => {
       message.error("Failed to delete the item");
     }
   };
+
+  const uploadPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const imageData = new FormData();
+    const target = e.target as HTMLInputElement;
+    const file: File = (target.files as FileList)[0];
+    imageData.append("image", file);
+    const { data } = await request.post("upload", imageData);
+    setSelectedFile(data);
+  }
 
 
   useEffect(() => {
@@ -117,9 +133,9 @@ const CollectionPage = () => {
         {collectionItems.length > 0 ? <div className="collection__items__row">
           {collectionItems?.map((item: ItemType) =>
             <div key={item._id} className="card">
-              <div className="card__image">
-                <img src={bookImg} alt="Book" />
-              </div>
+              <Link to={`${item._id}`} className="card__image">
+                <img src={item.photo || bookImg} alt="Book" />
+              </Link>
               <div className="card__buttons">
                 <button onClick={() => setLiked(!liked)} className="card__btn">{liked ? <LikeFilled style={{ fontSize: "25px", color: "red" }} /> : <LikeOutlined style={{ fontSize: "25px" }} />}</button>
                 <button onClick={() => setCommented(!commented)} className="card__btn"><MessageOutlined style={{ fontSize: "25px", color: commented ? "red" : "" }} /></button>
@@ -184,6 +200,12 @@ const CollectionPage = () => {
               rules={[{ required: true, message: 'Please provide item name' }]}
             >
               <Input />
+            </Form.Item>
+            <Form.Item label="Photo">
+              <input className="upload-photo" placeholder="Upload an image" onChange={uploadPhoto} type="file" />
+              {/* {photo?.url ? <div className="upload-photo-container">
+                <Image alt="Image" src={selectedFile?.url} />
+              </div> : null} */}
             </Form.Item>
             <Form.List
               name="tags"

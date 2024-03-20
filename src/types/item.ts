@@ -6,6 +6,7 @@ interface ItemType {
   userId: string;
   tags: string[];
   collectionId: string;
+  photo: string;
 }
 
 export default ItemType;
