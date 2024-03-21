@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Form, Input, Modal, Select, Skeleton, message } from "antd";
+import { Form, Input, Modal, Select, Skeleton, Space, message } from "antd";
 import { useState } from "react";
 
 import useCollection from "../../../store/collections";
@@ -27,6 +27,7 @@ const UserDashboard = () => {
   const [selected, setSelected] = useState<null | string>(null)
   const [isEditLoading, setIsEditLoading] = useState(false);
   const [category, setCategory] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("")
 
   const [form] = Form.useForm()
 
@@ -38,12 +39,15 @@ const UserDashboard = () => {
 
 
   const fetchCollections = async () => {
-    const { data } = await request.get("collections/user");
+    if (categoryFilter === "Category") {
+      setCategoryFilter("");
+    }
+    const { data } = await request.get(`collections/user?category=${categoryFilter}`);
     return data;
   }
 
 
-  const { data: userCollections, isLoading } = useQuery("userCollections", fetchCollections)
+  const { data: userCollections, isLoading } = useQuery(["userCollections", categoryFilter], fetchCollections)
 
 
   const showModal = () => {
@@ -113,6 +117,37 @@ const UserDashboard = () => {
             <p className="user__name">{user.name}</p>
             <span style={{ color: "red" }} className="user__name">({role})</span>
           </div>
+          <Space className="user__collections__filter">
+            <Select
+              className="select__filter"
+              style={{ width: 240 }}
+              onChange={(value) => setCategoryFilter(value)}
+              value={categoryFilter}
+              options={[
+                { label: "All", value: "" },
+                {
+                  label: "Books",
+                  value: "Books",
+                },
+                {
+                  label: "Coins",
+                  value: "Coins",
+                },
+                {
+                  label: "Art",
+                  value: "Art",
+                },
+                {
+                  label: "Sports",
+                  value: "Sports",
+                },
+                {
+                  label: "Other",
+                  value: "Other",
+                },
+              ]}
+            />
+          </Space>
           <div className="user__controls">
             <button onClick={() => navigate("/account")} className="user__btn"><img src={settingsIcon} />Settings</button>
             <button onClick={showModal} className="add__btn user__btn"><PlusOutlined style={{ fontSize: "20px" }} /> New Collection</button>

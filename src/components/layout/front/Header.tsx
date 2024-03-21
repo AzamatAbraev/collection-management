@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { NavLink, useNavigate, Link } from "react-router-dom";
 import useAuth from "../../../store/auth";
 import { AutoComplete } from "antd";
@@ -11,7 +11,8 @@ import CollectionType from "../../../types/collection";
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuth();
-  const [options, setOptions] = useState<{ value: string; label: JSX.Element }[]>([]);
+  const [options, setOptions] = useState([]);
+
 
   const fetchSearchResults = async (searchText: string) => {
     if (!searchText.trim()) {
@@ -20,19 +21,29 @@ const Header: React.FC = () => {
     }
     const { data } = await request.get(`/search?query=${searchText}`);
     setOptions(
-      data.map((searchItem: ItemType | CollectionType) => ({
-        value: searchItem._id,
-        label: (
-          <div onClick={() => navigate(`/collection/${searchItem._id}`)}>
-            {searchItem.name}
-          </div>
-        ),
-      }))
+      data.map((searchItem: ItemType | CollectionType) => {
+        const isItemType = "tags" in searchItem;
+
+        return {
+          value: searchItem.name,
+          label: (
+            <div onClick={() => {
+              if (isItemType) {
+                navigate(`/collection/${searchItem.collectionId}/${searchItem._id}`);
+              } else {
+                navigate(`/collection/${searchItem._id}`);
+              }
+            }}>
+              {isItemType ? `Item: ${searchItem.name}` : `Collection: ${searchItem.name}`}
+            </div>
+          ),
+        };
+      })
     );
   };
 
-  const onSelect = (value: string) => {
-    navigate(`collection/${value}`);
+  const onSelect = () => {
+    setOptions([])
   };
 
   return (
@@ -47,6 +58,7 @@ const Header: React.FC = () => {
               style={{ width: "100%" }}
               options={options}
               onSelect={onSelect}
+              allowClear
               onSearch={fetchSearchResults}
               placeholder="Search..."
             />

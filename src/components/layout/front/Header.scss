@@ -51,6 +51,8 @@ header {
   &__btn {
     padding: 8px 16px;
     background-color: #fff;
+    border: 1px solid transparent;
+    font-size: 16px;
     border-radius: 10px;
     color: #050505;
   }
@@ -58,11 +60,6 @@ header {
 
 .active {
   color: red;
-}
-
-.search__results {
-  position: fixed;
-  top: 50px;
 }
 
 @media (max-width: 1000px) {

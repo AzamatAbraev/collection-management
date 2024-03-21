@@ -25,10 +25,25 @@
     gap: 20px;
   }
 
+  &__collections__filter {
+    padding: 6px 12px;
+    background-color: #86c0ed;
+    border: 2px solid #2975b0;
+    font-weight: 500;
+    border-radius: 6px;
+
+    .select__filter {
+      background-color: #86c0ed;
+      border-radius: 10px;
+      color: #0d205e;
+    }
+  }
+
   &__dashboard__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 20px;
   }
 }
 

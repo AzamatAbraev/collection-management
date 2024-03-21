@@ -7,10 +7,12 @@ import request from '../../server';
 import { useState } from 'react';
 
 import './style.scss';
+import { useNavigate } from 'react-router-dom';
 
 const ItemCard = (item: ItemType) => {
   const [liked, setLiked] = useState(false);
   const [commented, setCommented] = useState(false);
+  const navigate = useNavigate()
 
   const queryKey = ['itemData', item.collectionId, item.userId];
 
@@ -35,7 +37,7 @@ const ItemCard = (item: ItemType) => {
 
   return (
     <div className="card">
-      <div className="card__image">
+      <div onClick={() => navigate(`collection/${item.collectionId}/${item._id}`)} className="card__image">
         <img src={item.photo || bookImg} alt="Book" />
       </div>
       <div className="card__buttons">
@@ -55,7 +57,7 @@ const ItemCard = (item: ItemType) => {
           <p>{data?.author}</p>
         </div>
         <div className="card__tags">
-          {item?.tags.map((tag) => <p key={tag}>#{tag}</p>)}
+          {item?.tags.map((tag, key) => <p key={key}>#{tag}</p>)}
         </div>
       </Skeleton>
     </div>

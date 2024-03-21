@@ -10,9 +10,9 @@ import LoadingPage from "../../loading";
 import ItemType from "../../../types/item";
 import NoDataComponent from "../../../components/no-data-found";
 import useAuth from "../../../store/auth";
+import useItems from "../../../store/items";
 
 import "./style.scss";
-import useItems from "../../../store/items";
 
 const CollectionPage = () => {
   const [liked, setLiked] = useState(false);
@@ -24,7 +24,7 @@ const CollectionPage = () => {
   const [isEditLoading, setIsEditLoading] = useState(false);
   const [refetch, setRefetch] = useState(false)
   const [authorId, setAuthorId] = useState("");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<string | null>(null);
 
 
   const [form] = Form.useForm();
@@ -46,6 +46,7 @@ const CollectionPage = () => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
+
       if (selectedFile) {
         values.photo = selectedFile;
       }
@@ -60,8 +61,6 @@ const CollectionPage = () => {
       setRefetch(!refetch);
     } catch (error) {
       message.error("Submission failed")
-      console.log(error);
-
     }
   };
 
@@ -72,7 +71,8 @@ const CollectionPage = () => {
       setSelected(itemId);
 
       const { data } = await request.get(`items/${itemId}`);
-      form.setFieldsValue(data)
+      setSelectedFile(data.photo)
+      form.setFieldsValue(data);
 
     } catch (error) {
       message.error("Update failed");
@@ -145,7 +145,7 @@ const CollectionPage = () => {
                   <h3>{item.name}</h3>
                 </div>
                 <div className="card__tags">
-                  {item?.tags.map((tag) => <p key={tag}>#{tag}</p>)}
+                  {item?.tags.map((tag, index) => <p key={index}>#{tag}</p>)}
                 </div>
                 <div className="card__controls">
                   {isAuthenticated && (role === 'admin' || authorId === user.userId) && (
@@ -202,7 +202,8 @@ const CollectionPage = () => {
               <Input />
             </Form.Item>
             <Form.Item label="Photo">
-              <input className="upload-photo" placeholder="Upload an image" onChange={uploadPhoto} type="file" />
+              <input placeholder="Upload an image" onChange={uploadPhoto} type="file" />
+              {selectedFile ? <img style={{ width: "100%", marginTop: "10px", height: "250px", objectFit: "cover" }} src={selectedFile} alt="image" /> : ""}
             </Form.Item>
             <Form.List
               name="tags"
