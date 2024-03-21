@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Form, Input, Modal, Skeleton, message } from "antd";
+import { Form, Input, Modal, Select, Skeleton, message } from "antd";
 import { useState } from "react";
 
 import useCollection from "../../../store/collections";
@@ -14,16 +14,19 @@ import readmoreIcon from "../../../assets/read-more.svg"
 import settingsIcon from "../../../assets/settins-icon.svg"
 import userIcon from "../../../assets/user-icon.svg"
 
-import "./style.scss";
 import LoadingPage from "../../loading";
 import { useQuery, useQueryClient } from "react-query";
 import CollectionType from "../../../types/collection";
+import { categoryOptions } from "../../../constants";
+
+import "./style.scss";
 
 
 const UserDashboard = () => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<null | string>(null)
   const [isEditLoading, setIsEditLoading] = useState(false);
+  const [category, setCategory] = useState("");
 
   const [form] = Form.useForm()
 
@@ -52,6 +55,9 @@ const UserDashboard = () => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
+      if (values.category === "Other" && values.newCategory) {
+        values.category = values.newCategory;
+      }
 
       if (!selected) {
         values.userId = user.userId;
@@ -61,6 +67,7 @@ const UserDashboard = () => {
       }
       queryClient.invalidateQueries('userCollections');
       setOpen(false);
+      setCategory("")
       setSelected(null);
     } catch (error) {
       message.error("Submission failed")
@@ -164,10 +171,37 @@ const UserDashboard = () => {
             <Form.Item
               label="Category"
               name="category"
+              rules={[
+                {
+                  required: true,
+                  message: "Please include your category!",
+                },
+              ]}
+            >
+              <Select
+                style={{
+                  width: "100%",
+                }}
+                onChange={(value) => setCategory(value)}
+                options={categoryOptions}
+              />
+            </Form.Item>
+            {category === "Other" && (
+              <Form.Item
+                label="New Category Name"
+                name="newCategory"
+                rules={[{ required: true, message: 'Please enter the new category name.' }]}
+              >
+                <Input />
+              </Form.Item>
+            )}
+            {/* <Form.Item
+              label="Category"
+              name="category"
               rules={[{ required: true, message: 'Please include category.' }]}
             >
               <Input />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
               label="Description"
               name="description"

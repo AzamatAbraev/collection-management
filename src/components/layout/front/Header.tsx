@@ -1,11 +1,40 @@
-import { NavLink, useNavigate } from "react-router-dom"
-import "./Header.scss"
-import { Link } from "react-router-dom"
-import useAuth from "../../../store/auth"
+import React, { useState } from "react";
+import { NavLink, useNavigate, Link } from "react-router-dom";
+import useAuth from "../../../store/auth";
+import { AutoComplete } from "antd";
+import request from "../../../server";
 
-const Header = () => {
-  const navigate = useNavigate()
+import "./Header.scss";
+import ItemType from "../../../types/item";
+import CollectionType from "../../../types/collection";
+
+const Header: React.FC = () => {
+  const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuth();
+  const [options, setOptions] = useState<{ value: string; label: JSX.Element }[]>([]);
+
+  const fetchSearchResults = async (searchText: string) => {
+    if (!searchText.trim()) {
+      setOptions([]);
+      return;
+    }
+    const { data } = await request.get(`/search?query=${searchText}`);
+    setOptions(
+      data.map((searchItem: ItemType | CollectionType) => ({
+        value: searchItem._id,
+        label: (
+          <div onClick={() => navigate(`/collection/${searchItem._id}`)}>
+            {searchItem.name}
+          </div>
+        ),
+      }))
+    );
+  };
+
+  const onSelect = (value: string) => {
+    navigate(`collection/${value}`);
+  };
+
   return (
     <header>
       <nav className="nav">
@@ -14,7 +43,13 @@ const Header = () => {
             <Link to="/">MyBox</Link>
           </div>
           <div className="nav__search">
-            <input type="text" className="nav__search__tbx" placeholder="searching..." />
+            <AutoComplete
+              style={{ width: "100%" }}
+              options={options}
+              onSelect={onSelect}
+              onSearch={fetchSearchResults}
+              placeholder="Search..."
+            />
           </div>
           <ul className="nav__menu">
             <li className="nav__item">
@@ -26,22 +61,30 @@ const Header = () => {
             <li className="nav__item">
               <NavLink to="/allcollections" className="nav__link">Collections</NavLink>
             </li>
-            <li className="nav__item">
-              <NavLink className="nav__btn" to={isAuthenticated ? "/user/dashboard" : "login"}>{isAuthenticated ? user?.name : "Login"}</NavLink>
-            </li>
-
-            {isAuthenticated ? <li className="nav__item">
-              <a className="nav__btn" onClick={() => logout(navigate)}>Logout</a>
-            </li> : <li className="nav__item">
-              <NavLink className="nav__btn" to="/register">Register</NavLink>
-            </li>
-            }
-
+            {isAuthenticated ? (
+              <>
+                <li className="nav__item">
+                  <NavLink className="nav__btn" to="/user/dashboard">{user?.name}</NavLink>
+                </li>
+                <li className="nav__item">
+                  <button className="nav__btn" onClick={() => logout(navigate)}>Logout</button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav__item">
+                  <NavLink className="nav__btn" to="/login">Login</NavLink>
+                </li>
+                <li className="nav__item">
+                  <NavLink className="nav__btn" to="/register">Register</NavLink>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </nav>
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

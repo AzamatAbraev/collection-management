@@ -60,6 +60,11 @@ header {
   color: red;
 }
 
+.search__results {
+  position: fixed;
+  top: 50px;
+}
+
 @media (max-width: 1000px) {
   .home__link,
   .about__link {

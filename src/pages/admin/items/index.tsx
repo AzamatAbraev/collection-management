@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Table, Button, Modal, Form, Input, Space, message } from 'antd';
 import { useQuery, useQueryClient } from 'react-query';
+import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 import request from '../../../server';
 import CollectionType from '../../../types/collection';
@@ -8,7 +9,8 @@ import useUsers from '../../../hooks/useUsers';
 import useCollections from '../../../hooks/useCollections';
 import useItems from '../../../store/items';
 import ItemType from '../../../types/item';
-import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+
+import notFoundImage from "../../../assets/not-found.png";
 
 const AdminItems = () => {
   const queryClient = useQueryClient();
@@ -80,6 +82,12 @@ const AdminItems = () => {
   }
 
   const columns = [
+    {
+      title: 'Photo',
+      dataIndex: 'photo',
+      key: 'photo',
+      render: (url: string) => <img style={{ width: "40px", height: "40px", objectFit: "cover", borderRadius: "50%" }} src={url ? url : notFoundImage} />
+    },
     {
       title: 'Name',
       dataIndex: 'name',

@@ -55,7 +55,7 @@ const ItemCard = (item: ItemType) => {
           <p>{data?.author}</p>
         </div>
         <div className="card__tags">
-          {item?.tags.map((tag) => <p>#{tag}</p>)}
+          {item?.tags.map((tag) => <p key={tag}>#{tag}</p>)}
         </div>
       </Skeleton>
     </div>

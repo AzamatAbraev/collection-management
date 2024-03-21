@@ -203,9 +203,6 @@ const CollectionPage = () => {
             </Form.Item>
             <Form.Item label="Photo">
               <input className="upload-photo" placeholder="Upload an image" onChange={uploadPhoto} type="file" />
-              {/* {photo?.url ? <div className="upload-photo-container">
-                <Image alt="Image" src={selectedFile?.url} />
-              </div> : null} */}
             </Form.Item>
             <Form.List
               name="tags"
