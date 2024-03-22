@@ -16,6 +16,7 @@
     font-size: 20px;
     font-weight: 500;
     color: #0d205e;
+    margin: 0;
     text-transform: "capitalize";
   }
 
@@ -76,4 +77,15 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   align-items: center;
+}
+
+.collection__card__btn {
+  background-color: #0d205e;
+  padding: 10px 20px;
+}
+
+@media (max-width: 990px) {
+  .user__dashboard__body {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

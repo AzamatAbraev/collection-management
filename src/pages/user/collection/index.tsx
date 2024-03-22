@@ -132,24 +132,24 @@ const CollectionPage = () => {
         </div>
         {collectionItems.length > 0 ? <div className="collection__items__row">
           {collectionItems?.map((item: ItemType) =>
-            <div key={item._id} className="card">
-              <Link to={`${item._id}`} className="card__image">
+            <div key={item._id} className="card-item">
+              <Link to={`${item._id}`} className="card-item__image">
                 <img src={item.photo || bookImg} alt="Book" />
               </Link>
-              <div className="card__buttons">
-                <button onClick={() => setLiked(!liked)} className="card__btn">{liked ? <LikeFilled style={{ fontSize: "25px", color: "red" }} /> : <LikeOutlined style={{ fontSize: "25px" }} />}</button>
-                <button onClick={() => setCommented(!commented)} className="card__btn"><MessageOutlined style={{ fontSize: "25px", color: commented ? "red" : "" }} /></button>
+              <div className="d-flex align-items-center gap-2">
+                <button onClick={() => setLiked(!liked)} className="card-item__btn">{liked ? <LikeFilled style={{ fontSize: "25px", color: "red" }} /> : <LikeOutlined style={{ fontSize: "25px" }} />}</button>
+                <button onClick={() => setCommented(!commented)} className="card-item__btn"><MessageOutlined style={{ fontSize: "25px", color: commented ? "red" : "" }} /></button>
               </div>
               <Skeleton loading={dataLoading}>
-                <div className="card__header">
+                <div>
                   <h3>{item.name}</h3>
                 </div>
-                <div className="card__tags">
+                <div className="d-flex gap-2 align-items-center">
                   {item?.tags.map((tag, index) => <p key={index}>#{tag}</p>)}
                 </div>
-                <div className="card__controls">
+                <div className="card-item__controls">
                   {isAuthenticated && (role === 'admin' || authorId === user.userId) && (
-                    <>
+                    <div className="d-flex align-items-center gap-2">
                       <button onClick={() => handleEdit(item?._id)} className="delete__btn">Edit</button>
                       <button
                         onClick={() =>
@@ -164,7 +164,7 @@ const CollectionPage = () => {
                       >
                         Delete
                       </button>
-                    </>
+                    </div>
                   )}
                 </div>
 

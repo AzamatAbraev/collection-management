@@ -4,28 +4,27 @@ import convertTime from "../../utils/convertTime";
 import useCollection from "../../store/collections";
 import { Skeleton } from "antd";
 
-import "./style.scss";
-
 const CollectionListCard = (collection: CollectionType) => {
   const { loading } = useCollection();
   return (
-    <Skeleton loading={loading}>
-      <div className="collection__card">
-        <div className="collection__card__row">
-          <h3>{collection.name}</h3>
-          <p>{collection.category}</p>
-        </div>
-        <div className="collection__card__row">
-          <p>{collection.description}</p>
-          <p>{convertTime(collection.createdAt)}</p>
-        </div>
-        <div className="collection__card__footer">
-          <Link to={`/collection/${collection._id}`} className="collection__card__btn">See Items</Link>
+    <Skeleton loading={loading} active>
+      <div className="card my-3 shadow-sm">
+        <div className="card-body">
+          <div className="d-flex align-items-center justify-content-between mb-2 gap-2">
+            <h3 className="">{collection.name}</h3>
+            <p className="text-muted">{collection.category}</p>
+          </div>
+          <div className="d-flex align-items-center justify-content-between mb-2 gap-2">
+            <p className="">{collection.description}</p>
+            <p className="text-muted">{convertTime(collection.createdAt)}</p>
+          </div>
+          <div className="d-flex">
+            <Link to={`/collection/${collection._id}`} className="btn btn-primary">See Items</Link>
+          </div>
         </div>
       </div>
-
     </Skeleton>
-  )
+  );
 }
 
-export default CollectionListCard
+export default CollectionListCard;

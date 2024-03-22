@@ -5,14 +5,12 @@ import bookImg from '../../assets/book.webp';
 import ItemType from '../../types/item';
 import request from '../../server';
 import { useState } from 'react';
-
-import './style.scss';
 import { useNavigate } from 'react-router-dom';
 
 const ItemCard = (item: ItemType) => {
   const [liked, setLiked] = useState(false);
   const [commented, setCommented] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const queryKey = ['itemData', item.collectionId, item.userId];
 
@@ -29,37 +27,38 @@ const ItemCard = (item: ItemType) => {
     onError: (err) => {
       message.error('Failed to fetch data');
       console.log(err);
-
     }
   });
 
   if (error) console.error("Failed to fetch data:", error);
 
   return (
-    <div className="card">
-      <div onClick={() => navigate(`collection/${item.collectionId}/${item._id}`)} className="card__image">
-        <img src={item.photo || bookImg} alt="Book" />
+    <div className="card mb-3">
+      <div className="card-img-top" onClick={() => navigate(`collection/${item.collectionId}/${item._id}`)} style={{ cursor: 'pointer' }}>
+        <img src={item.photo || bookImg} alt="Book" style={{ width: "100%", height: "300px", objectFit: "cover" }} className="img-fluid" />
       </div>
-      <div className="card__buttons">
-        <button onClick={() => setLiked(!liked)} className="card__btn">
-          {liked ? <LikeFilled style={{ fontSize: '25px', color: 'red' }} /> : <LikeOutlined style={{ fontSize: '25px' }} />}
-        </button>
-        <button onClick={() => setCommented(!commented)} className="card__btn">
-          <MessageOutlined style={{ fontSize: '25px', color: commented ? 'red' : '' }} />
-        </button>
+      <div className="card-body">
+        <div className="d-flex gap-2">
+          <button onClick={() => setLiked(!liked)} className="btn p-0">
+            {liked ? <LikeFilled style={{ fontSize: '25px', color: 'red' }} /> : <LikeOutlined style={{ fontSize: '25px' }} />}
+          </button>
+          <button onClick={() => setCommented(!commented)} className="btn p-0">
+            <MessageOutlined style={{ fontSize: '25px', color: commented ? 'red' : '' }} />
+          </button>
+        </div>
+        <Skeleton loading={isLoading} active>
+          <div className="card-title mt-3">
+            <h5 className='fs-3'>{item.name}</h5>
+          </div>
+          <div className="d-flex align-items-center justify-content-between card-text">
+            <p>{data?.collectionName}</p>
+            <p>{data?.author}</p>
+          </div>
+          <div className="mt-2">
+            {item?.tags.map((tag, key) => <span key={key} className="badge bg-secondary me-1">#{tag}</span>)}
+          </div>
+        </Skeleton>
       </div>
-      <Skeleton loading={isLoading}>
-        <div className="card__header">
-          <h3>{item.name}</h3>
-        </div>
-        <div className="card__footer">
-          <p>{data?.collectionName}</p>
-          <p>{data?.author}</p>
-        </div>
-        <div className="card__tags">
-          {item?.tags.map((tag, key) => <p key={key}>#{tag}</p>)}
-        </div>
-      </Skeleton>
     </div>
   );
 };

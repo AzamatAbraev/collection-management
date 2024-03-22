@@ -154,18 +154,18 @@ const UserDashboard = () => {
           </div>
         </div>
         <div className="user__dashboard__body">
-          {userCollections?.map((collection: CollectionType) => <div key={collection._id} className="collection__card">
-            <div className="collection__card__row">
+          {userCollections?.map((collection: CollectionType) => <div key={collection._id} className="card p-3">
+            <div className="d-flex align-items-center justify-content-between">
               <h3>{collection.name}</h3>
               <p>{collection.category}</p>
             </div>
-            <div className="collection__card__row">
+            <div className="d-flex align-items-center justify-content-between">
               <p>{collection.description}</p>
               <p>{convertTime(collection.createdAt)}</p>
             </div>
-            <div className="collection__card__footer">
-              <button disabled={isEditLoading} className="edit__btn" onClick={() => handleEdit(collection?._id)}><EditOutlined style={{ fontSize: "20px" }} /></button>
-              <button className="delete__btn" onClick={() =>
+            <div className="d-flex gap-2">
+              <button disabled={isEditLoading} className="btn btn-primary" onClick={() => handleEdit(collection?._id)}><EditOutlined style={{ fontSize: "20px" }} /></button>
+              <button className="btn btn-danger" onClick={() =>
                 Modal.confirm({
                   title: "Are you sure you want to delete this collection and all its items?",
                   async onOk() {
@@ -173,7 +173,7 @@ const UserDashboard = () => {
                   },
                 })
               }><DeleteOutlined style={{ fontSize: "20px" }} /></button>
-              <Link to={`/collection/${collection._id}`} className="collection__card__btn"><img src={readmoreIcon} alt="Read More" /></Link>
+              <Link className="btn btn-info" to={`/collection/${collection._id}`}><img src={readmoreIcon} alt="Read More" /></Link>
             </div>
           </div>)}
         </div>
@@ -230,13 +230,6 @@ const UserDashboard = () => {
                 <Input />
               </Form.Item>
             )}
-            {/* <Form.Item
-              label="Category"
-              name="category"
-              rules={[{ required: true, message: 'Please include category.' }]}
-            >
-              <Input />
-            </Form.Item> */}
             <Form.Item
               label="Description"
               name="description"
