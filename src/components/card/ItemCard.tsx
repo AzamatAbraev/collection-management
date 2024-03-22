@@ -23,7 +23,7 @@ const ItemCard = (item: ItemType) => {
 
   const queryKey = ['itemData', item.collectionId, item.userId];
 
-  const { data, isLoading, error } = useQuery(queryKey, async () => {
+  const { data, isLoading } = useQuery(queryKey, async () => {
     const [collectionResponse, userResponse] = await Promise.all([
       request.get(`collections/${item.collectionId}`),
       request.get(`users/${item.userId}`),
@@ -39,19 +39,15 @@ const ItemCard = (item: ItemType) => {
   });
 
   const handleLikeClick = async () => {
-    if (item.likes.includes(user.userId)) {
+    if (liked) {
       await unlikeItem(item._id);
-      message.success("Unliked")
       setLiked(false)
     } else {
       await likeItem(item._id);
-      message.success("Liked")
       setLiked(true)
     }
     queryClient.invalidateQueries("latestItems");
   }
-
-  if (error) console.error("Failed to fetch data:", error);
 
   return (
     <div className="card mb-3">
@@ -68,7 +64,7 @@ const ItemCard = (item: ItemType) => {
           </button>
         </div>
         <Skeleton loading={isLoading} active>
-          <div style={{ minHeight: "20px" }}>
+          <div style={{ minHeight: "20px", cursor: "pointer" }}>
             {item.likes.length > 0 ? <p style={{ margin: "0px" }}>{item.likes.length} {item.likes.length > 1 ? "likes" : "like"}</p> : ""}
           </div>
           <div className="card-title mt-3">
