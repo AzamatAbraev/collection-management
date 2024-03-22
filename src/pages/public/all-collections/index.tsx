@@ -12,14 +12,14 @@ const AllCollections = () => {
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
 
-  const initialSearch = searchParams.get("search") || "";
+  const initialSearch = searchParams.get("query") || "";
   const initialCategory = searchParams.get("category") || "";
 
   const [search, setSearch] = useState(initialSearch);
   const [category, setCategory] = useState(initialCategory);
 
   const fetchCollections = async () => {
-    const params = { search, category };
+    const params = { query: search, category };
     const { data } = await request.get('/collections', { params });
     return data;
   };
