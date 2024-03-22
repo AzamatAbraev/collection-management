@@ -1,23 +1,23 @@
+import { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import request from "../../../server";
-import { useState } from "react";
 import { Button, Input, Skeleton, Space } from "antd";
+import { LikeFilled, LikeOutlined, MessageOutlined } from "@ant-design/icons";
+
+import request from "../../../server";
 import CommentCard from "../../../components/comment";
 import CommentType from "../../../types/comment";
-
-// import notFoundImage from "../../../assets/not-found.png"
 import bookImage from "../../../assets/book.webp"
 
 import "./style.scss"
-import { LikeFilled, LikeOutlined, MessageOutlined } from "@ant-design/icons";
 
 const ItemPage = () => {
-  const queryClient = useQueryClient();
   const { itemId } = useParams();
   const [commentContent, setCommentContent] = useState("");
   const [seeComments, setSeeComments] = useState(false);
-  const [liked, setLiked] = useState(false)
+  const [liked, setLiked] = useState(false);
+  
+  const queryClient = useQueryClient();
 
   const fetchSingleItem = async () => {
     const { data } = await request.get(`items/${itemId}`);

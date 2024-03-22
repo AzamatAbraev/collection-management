@@ -1,22 +1,17 @@
 import { Fragment } from "react/jsx-runtime";
+import { useQuery } from "react-query";
+
+import { getCollections } from "../../../api/collections";
 
 import HomeCarousel from "../../../components/carousel";
 import LoadingPage from "../../loading";
 import CollectionListCard from "../../../components/card/CollectionListCard";
-
-import "./style.scss";
-import request from "../../../server";
-import { useQuery } from "react-query";
 import CollectionType from "../../../types/collection";
 
+import "./style.scss";
+
 const HomePage = () => {
-
-  const fetchCollections = async () => {
-    const { data } = await request.get("collections");
-    return data;
-  }
-
-  const { data: collections, isLoading } = useQuery("allCollections", fetchCollections)
+  const { data: collections, isLoading } = useQuery("collections", getCollections)
 
   return (
     <Fragment>

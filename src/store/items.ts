@@ -13,6 +13,8 @@ interface ItemsStoreType {
   addItem: (itemData: ItemType, collectionId: string | undefined) => void;
   updateItem: (itemId: string, updatedData: ItemType) => void;
   deleteItem: (itemId: string) => void;
+  likeItem: (itemId: string) => void;
+  unlikeItem: (itemId: string) => void;
 }
 
 const useItems = create<ItemsStoreType>()((set, get) => ({
@@ -71,6 +73,12 @@ const useItems = create<ItemsStoreType>()((set, get) => ({
     } finally {
       set({ loading: false });
     }
+  },
+  likeItem: async (itemId) => {
+    await request.patch(`items/${itemId}/like`);
+  },
+  unlikeItem: async (itemId) => {
+    await request.patch(`items/${itemId}/unlike`);
   },
 }));
 

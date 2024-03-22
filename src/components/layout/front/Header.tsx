@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { NavLink, useNavigate, Link } from "react-router-dom";
-import useAuth from "../../../store/auth";
 import { AutoComplete } from "antd";
+
+import useAuth from "../../../store/auth";
 import request from "../../../server";
 import ItemType from "../../../types/item";
 import CollectionType from "../../../types/collection";
 
 const Header: React.FC = () => {
+  const [options, setOptions] = useState([]);
+
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuth();
-  const [options, setOptions] = useState([]);
 
   const fetchSearchResults = async (searchText: string) => {
     if (!searchText.trim()) {

@@ -1,16 +1,25 @@
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { LikeFilled, LikeOutlined, MessageOutlined } from '@ant-design/icons';
 import { Skeleton, message } from 'antd';
-import bookImg from '../../assets/book.webp';
-import ItemType from '../../types/item';
-import request from '../../server';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import bookImg from '../../assets/book.webp';
+import ItemType from '../../types/item';
+import request from '../../server';
+import useItems from '../../store/items';
+import useAuth from '../../store/auth';
+
 const ItemCard = (item: ItemType) => {
-  const [liked, setLiked] = useState(false);
+  const { user } = useAuth()
+
+  const [liked, setLiked] = useState(item.likes.includes(user.userId));
   const [commented, setCommented] = useState(false);
   const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
+
+  const { likeItem, unlikeItem } = useItems();
 
   const queryKey = ['itemData', item.collectionId, item.userId];
 
@@ -25,10 +34,22 @@ const ItemCard = (item: ItemType) => {
     };
   }, {
     onError: (err) => {
-      message.error('Failed to fetch data');
-      console.log(err);
+      message.error('Failed to fetch data' + err);
     }
   });
+
+  const handleLikeClick = async () => {
+    if (item.likes.includes(user.userId)) {
+      await unlikeItem(item._id);
+      message.success("Unliked")
+      setLiked(false)
+    } else {
+      await likeItem(item._id);
+      message.success("Liked")
+      setLiked(true)
+    }
+    queryClient.invalidateQueries("latestItems");
+  }
 
   if (error) console.error("Failed to fetch data:", error);
 
@@ -39,7 +60,7 @@ const ItemCard = (item: ItemType) => {
       </div>
       <div className="card-body">
         <div className="d-flex gap-2">
-          <button onClick={() => setLiked(!liked)} className="btn p-0">
+          <button onClick={handleLikeClick} className="btn p-0">
             {liked ? <LikeFilled style={{ fontSize: '25px', color: 'red' }} /> : <LikeOutlined style={{ fontSize: '25px' }} />}
           </button>
           <button onClick={() => setCommented(!commented)} className="btn p-0">
@@ -47,6 +68,9 @@ const ItemCard = (item: ItemType) => {
           </button>
         </div>
         <Skeleton loading={isLoading} active>
+          <div style={{ minHeight: "20px" }}>
+            {item.likes.length > 0 ? <p style={{ margin: "0px" }}>{item.likes.length} {item.likes.length > 1 ? "likes" : "like"}</p> : ""}
+          </div>
           <div className="card-title mt-3">
             <h5 className='fs-3'>{item.name}</h5>
           </div>

@@ -1,26 +1,25 @@
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Form, Input, Modal, Select, Skeleton, Space, message } from "antd";
 import { useState } from "react";
+import { useQuery, useQueryClient } from "react-query";
+import { useNavigate, Link } from "react-router-dom";
 
-import useCollection from "../../../store/collections";
+import { Form, Input, Modal, Select, Skeleton, Space, message } from "antd";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
-import useAuth from "../../../store/auth";
-import convertTime from "../../../utils/convertTime";
+
 import request from "../../../server";
+import useAuth from "../../../store/auth";
+import useCollection from "../../../store/collections";
+import { getUserCollections } from "../../../api/collections";
+import convertTime from "../../../utils/convertTime";
+import LoadingPage from "../../loading";
+import { categoryOptions } from "../../../constants";
+import CollectionType from "../../../types/collection";
 
 import readmoreIcon from "../../../assets/read-more.svg"
 import settingsIcon from "../../../assets/settins-icon.svg"
 import userIcon from "../../../assets/user-icon.svg"
 
-import LoadingPage from "../../loading";
-import { useQuery, useQueryClient } from "react-query";
-import CollectionType from "../../../types/collection";
-import { categoryOptions } from "../../../constants";
-
 import "./style.scss";
-
 
 const UserDashboard = () => {
   const [open, setOpen] = useState(false);
@@ -29,26 +28,15 @@ const UserDashboard = () => {
   const [category, setCategory] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("")
 
-  const [form] = Form.useForm()
-
-  const queryClient = useQueryClient();
-
-  const navigate = useNavigate();
   const { addCollection, deleteCollection, updateCollection } = useCollection();
   const { user, role } = useAuth();
+  
+  const [form] = Form.useForm()
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
 
-  const fetchCollections = async () => {
-    if (categoryFilter === "Category") {
-      setCategoryFilter("");
-    }
-    const { data } = await request.get(`collections/user?category=${categoryFilter}`);
-    return data;
-  }
-
-
-  const { data: userCollections, isLoading } = useQuery(["userCollections", categoryFilter], fetchCollections)
-
+  const { data: userCollections, isLoading } = useQuery(["userCollections", categoryFilter], getUserCollections)
 
   const showModal = () => {
     form.resetFields();

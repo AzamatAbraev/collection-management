@@ -1,12 +1,12 @@
-
+import { useQuery } from "react-query";
+import { Skeleton } from "antd";
 import Slider from "react-slick";
+
+import { getLatestItems } from "../../api/items";
 import ItemCard from "../card/ItemCard";
+import ItemType from "../../types/item";
 
 import "./style.scss"
-import { Skeleton } from "antd";
-import request from "../../server";
-import { useQuery } from "react-query";
-import ItemType from "../../types/item";
 
 function Responsive() {
   const settings = {
@@ -46,12 +46,8 @@ function Responsive() {
     ]
   };
 
-  const fetchLatestItems = async () => {
-    const { data } = await request.get("items/latest");
-    return data;
-  };
 
-  const { data: latestItems, isLoading } = useQuery('latestItems', fetchLatestItems);
+  const { data: latestItems, isLoading } = useQuery('latestItems', getLatestItems);
 
   return (
     <div className="slider-container container">

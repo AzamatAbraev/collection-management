@@ -7,6 +7,7 @@ interface ItemType {
   tags: string[];
   collectionId: string;
   photo: string;
+  likes: string[];
 }
 
 export default ItemType;
