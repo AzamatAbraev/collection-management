@@ -24,7 +24,7 @@
 }
 
 .dashboard-main {
-  margin: 0 !important;
+  padding: 20px !important;
   overflow: auto !important;
   height: calc(100vh - 64px) !important;
 }
@@ -36,24 +36,18 @@
   justify-content: space-between;
 }
 
-.notification {
-  margin-right: 20px;
-  border-radius: 6px;
-  display: flex;
-  svg {
-    padding: 2px 4px;
-    border: 1px solid #fff;
-    // background-color: transparent;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: 0.5s ease;
-    height: 30px;
-    width: 40px;
-  }
-}
-
 .ant-menu-item-selected {
   border: 1px solid #fff;
+  background-color: transparent !important;
+}
+
+.ant-menu-item button {
+  width: 100%;
+  padding: 0;
+}
+
+.logout-collapsed {
+  background-color: transparent !important;
 }
 
 .dashboard-header svg {

@@ -6,12 +6,15 @@ import convertToRelativeTime from "../../utils/timeDifference";
 import { message, Input, Button, Popover, Space } from "antd";
 import { useQueryClient } from "react-query";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const CommentCard = (comment: CommentType) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newContent, setNewContent] = useState(comment.content);
   const queryClient = useQueryClient();
   const { isAuthenticated, role, user } = useAuth();
+
+  const { t } = useTranslation()
 
   const isEdited = new Date(comment.updatedAt) > new Date(comment.createdAt);
 
@@ -23,7 +26,7 @@ const CommentCard = (comment: CommentType) => {
 
   const handleEdit = async (commentId: string) => {
     if (!newContent.trim()) {
-      message.error("Comment content cannot be empty");
+      message.error(t("Validation"));
       return;
     }
     await request.patch(`items/comments/${commentId}`, { content: newContent });
@@ -37,8 +40,8 @@ const CommentCard = (comment: CommentType) => {
         <>
           {!isEditing && (
             <div>
-              <Button type="text" onClick={() => setIsEditing(true)}>Edit</Button>
-              <Button type="text" onClick={() => handleDelete(comment._id)}>Delete</Button>
+              <Button type="text" onClick={() => setIsEditing(true)}>{t("Edit")}</Button>
+              <Button type="text" onClick={() => handleDelete(comment._id)}>{t("Delete")}</Button>
             </div>
           )}
         </>
@@ -55,7 +58,7 @@ const CommentCard = (comment: CommentType) => {
         <div className="d-flex justify-content-between">
           <div className="d-flex align-items-center gap-2">
             <h3 className="mb-0 text-capitalize fw-bold fs-5">{comment.userId.username}</h3>
-            {isEdited && <span>(Edited)</span>}
+            {isEdited && <span>({t("Edited")})</span>}
             <p className="mb-0 fs-6">{convertToRelativeTime(comment.createdAt)}</p>
           </div>
           {isAuthenticated && (role === "admin" || comment.userId._id === user.userId) && <Popover content={optionsContent} trigger="click">

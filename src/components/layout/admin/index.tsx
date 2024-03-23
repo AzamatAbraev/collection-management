@@ -4,6 +4,7 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   ClockCircleOutlined,
   DatabaseOutlined,
+  LogoutOutlined,
   MenuFoldOutlined,
   ReadOutlined,
   TeamOutlined,
@@ -21,7 +22,7 @@ import useAuth from "../../../store/auth";
 
 const AdminLayout = () => {
   const { pathname } = useLocation();
-  const { role, logout } = useAuth();
+  const { logout } = useAuth();
 
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ const AdminLayout = () => {
         collapsed={collapsed}
       >
         <h3 className="dashboard-logo">
-          {collapsed ? "PTP" : "PTP Solutions"}
+          {!collapsed && "Dashboard"}
         </h3>
         <Menu
           className="menu"
@@ -49,9 +50,6 @@ const AdminLayout = () => {
               label: (
                 <Link to="dashboard">
                   Dashboard
-                  <span className="dashboard-role-badge">
-                    {role?.charAt(0).toUpperCase()}
-                  </span>
                 </Link>
               ),
             },
@@ -101,8 +99,8 @@ const AdminLayout = () => {
               label: (
                 <Button
                   type="primary"
+                  className={collapsed ? `logout-collapsed` : ``}
                   danger
-                  style={{ width: "100%" }}
                   onClick={() =>
                     Modal.confirm({
                       title: "Do you want to log out ?",
@@ -110,7 +108,7 @@ const AdminLayout = () => {
                     })
                   }
                 >
-                  Logout
+                  {!collapsed ? "Logout" : <LogoutOutlined />}
                 </Button>
               ),
             },
@@ -150,12 +148,11 @@ const AdminLayout = () => {
         <Content
           className="dashboard-main"
           style={{
-            padding: 24,
             minHeight: 280,
             background: "#fff",
           }}
         >
-          <div style={{ marginTop: "60px" }}>
+          <div>
             <Outlet />
           </div>
         </Content>

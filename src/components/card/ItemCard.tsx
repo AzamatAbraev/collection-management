@@ -55,11 +55,11 @@ const ItemCard = (item: ItemType) => {
         <img src={item.photo || bookImg} alt="Book" style={{ width: "100%", height: "300px", objectFit: "cover" }} className="img-fluid" />
       </div>
       <div className="card-body">
-        <div className="d-flex gap-2">
-          <button onClick={handleLikeClick} className="btn p-0">
+        <div className="d-flex">
+          <button onClick={handleLikeClick} className="btn p-1">
             {liked ? <LikeFilled style={{ fontSize: '25px', color: 'red' }} /> : <LikeOutlined style={{ fontSize: '25px' }} />}
           </button>
-          <button onClick={() => setCommented(!commented)} className="btn p-0">
+          <button onClick={() => setCommented(!commented)} className="btn p-1">
             <MessageOutlined style={{ fontSize: '25px', color: commented ? 'red' : '' }} />
           </button>
         </div>

@@ -11,6 +11,8 @@ interface AuthType {
   user: { name: string; role: string; userId: string };
   role: string;
   loading: boolean;
+  language: string;
+  setLanguage: (language: string) => void;
   login: (values: LoginType, navigate: NavigateFunction) => void;
   register: (values: RegisterType, navigate: NavigateFunction) => void;
   logout: (navigate: NavigateFunction) => void;
@@ -20,7 +22,10 @@ const useAuth = create<AuthType>()((set) => ({
   isAuthenticated: Boolean(Cookies.get("TOKEN")),
   loading: false,
   user: JSON.parse(localStorage.getItem(USER_DATA) || "{}"),
-
+  language: "en",
+  setLanguage: (language) => {
+    set({ language });
+  },
   role: Cookies.get(USER_ROLE) || "",
   login: async (values, navigate) => {
     set({ loading: true });

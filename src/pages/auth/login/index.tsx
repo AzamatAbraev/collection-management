@@ -2,12 +2,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import LoginSchema from "../../../schemas/login";
 import useAuth from "../../../store/auth";
+import { useTranslation } from "react-i18next";
+
 
 import "./style.scss"
 
 const LoginPage = () => {
   const { login } = useAuth()
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const formik = useFormik({
     initialValues: {
@@ -23,8 +26,8 @@ const LoginPage = () => {
     <section className="login-page">
       <div className="login__main">
         <div className="login__header">
-          <h2>Sign In</h2>
-          <p>Do not have an account? <Link to="/register">Register</Link></p>
+          <h2>{t("Login")}</h2>
+          <p>{t("Not-Registered")} <Link to="/register">{t("Register")}</Link></p>
         </div>
         <form onSubmit={formik.handleSubmit} className="login__form">
           <div className="input__field">
@@ -32,7 +35,7 @@ const LoginPage = () => {
               type="text"
               id="email"
               name="email"
-              placeholder="Email"
+              placeholder={t("Email")}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.email}
@@ -47,7 +50,7 @@ const LoginPage = () => {
               type="password"
               id="password"
               name="password"
-              placeholder="Password"
+              placeholder={t("Password")}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.password}
@@ -58,7 +61,7 @@ const LoginPage = () => {
           </div>
 
 
-          <button type="submit" className="login__btn">Login</button>
+          <button type="submit" className="login__btn">{t("Login")}</button>
         </form>
       </div>
     </section>

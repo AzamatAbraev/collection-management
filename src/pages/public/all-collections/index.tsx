@@ -4,13 +4,14 @@ import useCollection from "../../../store/collections";
 import request from "../../../server";
 import CollectionType from "../../../types/collection";
 import { useQuery } from "react-query";
-import { categoryOptions } from "../../../constants";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const AllCollections = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
+  const { t } = useTranslation();
 
   const initialSearch = searchParams.get("query") || "";
   const initialCategory = searchParams.get("category") || "";
@@ -45,16 +46,18 @@ const AllCollections = () => {
     <section id="allcollections">
       <div className="container py-5">
         <div className="d-flex gap-3 mb-3">
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Searching..." type="text" className="form-control" />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("Search")} type="text" className="form-control" />
           <select value={category} onChange={(e) => setCategory(e.target.value)} style={{ width: "200px" }} className="form-select">
-            <option value="">All</option>
-            {categoryOptions?.map((category) => category.value ? (
-              <option key={category.value} value={category.value}>{category.label}</option>
-            ) : "")}
+            <option value="">{t("All")}</option>
+            <option value="Books">{t("Books")}</option>
+            <option value="Coins">{t("Coins")}</option>
+            <option value="Art">{t("Art")}</option>
+            <option value="Sports">{t("Sports")}</option>
+            <option value="Other">{t("Other")}</option>
           </select>
         </div>
         {isLoading ? (
-          <p>Loading collections...</p>
+          <p>Loading...</p>
         ) : (
           <div className="row">
             {collections.map((collection: CollectionType) => (

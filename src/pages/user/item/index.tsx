@@ -12,6 +12,8 @@ import bookImage from "../../../assets/book.webp"
 import "./style.scss"
 import useItems from "../../../store/items";
 import useAuth from "../../../store/auth";
+import LoadingPage from "../../loading";
+import { useTranslation } from "react-i18next";
 
 interface LikedUserType {
   _id: string,
@@ -26,6 +28,7 @@ const ItemPage = () => {
   const queryClient = useQueryClient();
   const { likeItem, unlikeItem } = useItems();
   const { user } = useAuth()
+  const { t } = useTranslation()
 
   const fetchSingleItem = async () => {
     const { data } = await request.get(`items/${itemId}`);
@@ -88,7 +91,7 @@ const ItemPage = () => {
       <p>{lastLikerUsername} and {totalLikes - 1} others liked this item.</p>;
   })();
 
-  if (!item || !item.likes) return <p>Loading likes...</p>;
+  if (!item || !item.likes) return <LoadingPage />
 
 
   return (
@@ -116,15 +119,15 @@ const ItemPage = () => {
         </div>
         <div className="item__comments">
           <Space>
-            <Input style={{ width: "330px" }} placeholder="Write a comment" value={commentContent} onChange={(e) => setCommentContent(e.target.value)} />
-            <Button onClick={handleAddComment}>Add Comment</Button>
+            <Input style={{ width: "330px" }} placeholder={t("Write-Comment")} value={commentContent} onChange={(e) => setCommentContent(e.target.value)} />
+            <Button onClick={handleAddComment}>{t("Add-Comment")}</Button>
           </Space>
-          <h4 style={{ cursor: "pointer", margin: "10px 0px" }} onClick={() => setSeeComments(!seeComments)}>{seeComments ? "Hide" : "See"} Comments ({comments?.length || 0})</h4>
-          {seeComments ? <div className="comments__row">
+          <h4 style={{ cursor: "pointer", margin: "10px 0px" }} onClick={() => setSeeComments(!seeComments)}>{seeComments ? t("Hide-Comments") : t("See-Comments")} ({comments?.length || 0})</h4>
+          {seeComments && <div className="comments__row">
             {comments?.map((comment: CommentType) => (
               <CommentCard key={comment._id} {...comment} />
             ))}
-          </div> : ""}
+          </div>}
         </div>
       </Skeleton>
     </div>

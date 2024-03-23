@@ -13,6 +13,7 @@ import useAuth from "../../../store/auth";
 import useItems from "../../../store/items";
 
 import "./style.scss";
+import { useTranslation } from "react-i18next";
 
 const CollectionPage = () => {
   const [liked, setLiked] = useState(false);
@@ -28,6 +29,8 @@ const CollectionPage = () => {
 
 
   const [form] = Form.useForm();
+  const { t } = useTranslation();
+
 
   const { collectionId } = useParams();
   const { isAuthenticated, role, user } = useAuth();
@@ -44,24 +47,21 @@ const CollectionPage = () => {
   }
 
   const handleOk = async () => {
-    try {
-      const values = await form.validateFields();
+    const values = await form.validateFields();
 
-      if (selectedFile) {
-        values.photo = selectedFile;
-      }
-
-      if (!selected) {
-        await addItem(values, collectionId);
-      } else {
-        await updateItem(selected, values)
-      }
-      setOpen(false);
-      setSelected(null);
-      setRefetch(!refetch);
-    } catch (error) {
-      message.error("Submission failed")
+    if (selectedFile) {
+      values.photo = selectedFile;
     }
+
+    if (!selected) {
+      await addItem(values, collectionId);
+    } else {
+      await updateItem(selected, values)
+    }
+    setOpen(false);
+    setSelected(null);
+    setRefetch(!refetch);
+
   };
 
   const handleEdit = async (itemId: string) => {
@@ -75,7 +75,7 @@ const CollectionPage = () => {
       form.setFieldsValue(data);
 
     } catch (error) {
-      message.error("Update failed");
+      message.error("Error");
     } finally {
       setIsEditLoading(false)
     }
@@ -84,11 +84,10 @@ const CollectionPage = () => {
   const handleDelete = async (collectionId: string) => {
     try {
       await deleteItem(collectionId);
-      message.success("Item deleted successfully");
       setRefetch(!refetch);
 
     } catch (error) {
-      message.error("Failed to delete the item");
+      message.error("Error");
     }
   };
 
@@ -127,7 +126,7 @@ const CollectionPage = () => {
         <div className="collection__items__header">
           <p className="collection__items__title">{collectionName}</p>
           {isAuthenticated ? <div className="user__controls">
-            <button onClick={showModal} className="add__btn user__btn"><PlusOutlined style={{ fontSize: "20px" }} /> New Item</button>
+            <button onClick={showModal} className="add__btn user__btn"><PlusOutlined style={{ fontSize: "20px" }} /> {t("New Item")}</button>
           </div> : ""}
         </div>
         {collectionItems.length > 0 ? <div className="collection__items__row">
@@ -150,7 +149,7 @@ const CollectionPage = () => {
                 <div className="card-item__controls">
                   {isAuthenticated && (role === 'admin' || authorId === user.userId) && (
                     <div className="d-flex align-items-center gap-2">
-                      <button onClick={() => handleEdit(item?._id)} className="delete__btn">Edit</button>
+                      <button onClick={() => handleEdit(item?._id)} className="delete__btn">{t("Edit")}</button>
                       <button
                         onClick={() =>
                           Modal.confirm({
@@ -162,7 +161,7 @@ const CollectionPage = () => {
                         }
                         className="edit__btn"
                       >
-                        Delete
+                        {t("Delete")}
                       </button>
                     </div>
                   )}
@@ -177,16 +176,17 @@ const CollectionPage = () => {
       </div>}
 
       <Modal
-        title={selected ? "Edit Item" : "Add Item"}
+        title={selected ? t("Edit") : t("Add")}
         open={open}
         onOk={handleOk}
-        okText={selected ? "Update" : "Add"}
+        okText={selected ? t("Edit") : t("Add")}
         confirmLoading={isEditLoading}
         onCancel={handleCancel}
+        cancelText={t("Cancel")}
       >
         <Skeleton loading={isEditLoading}>
           <Form
-            name="New Item"
+            name={t("New Item")}
             labelCol={{ span: 24 }}
             wrapperCol={{ span: 24 }}
             form={form}
@@ -195,13 +195,13 @@ const CollectionPage = () => {
             autoComplete="off"
           >
             <Form.Item
-              label="Name"
+              label={t("Name")}
               name="name"
-              rules={[{ required: true, message: 'Please provide item name' }]}
+              rules={[{ required: true, message: t('Validation') }]}
             >
               <Input />
             </Form.Item>
-            <Form.Item label="Photo">
+            <Form.Item label={t("Photo")}>
               <input placeholder="Upload an image" onChange={uploadPhoto} type="file" />
               {selectedFile ? <img style={{ width: "100%", marginTop: "10px", height: "250px", objectFit: "cover" }} src={selectedFile} alt="image" /> : ""}
             </Form.Item>
@@ -225,16 +225,16 @@ const CollectionPage = () => {
                         {...field}
                         label={`Tag ${index + 1}`}
                         name={[field.name]}
-                        rules={[{ required: true, message: 'Missing tag' }]}
+                        rules={[{ required: true, message: t('Validation') }]}
                       >
-                        <Input placeholder="Enter tag" />
+                        <Input placeholder={"Add"} />
                       </Form.Item>
                       <MinusCircleOutlined onClick={() => remove(field.name)} />
                     </Space>
                   ))}
                   <Form.Item>
                     <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                      Add Tag
+                      {t("Add")}
                     </Button>
                   </Form.Item>
                 </>

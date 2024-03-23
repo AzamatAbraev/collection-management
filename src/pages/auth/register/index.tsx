@@ -4,11 +4,13 @@ import "./style.scss"
 import useAuth from "../../../store/auth";
 import { useFormik } from "formik";
 import RegisterSchema from "../../../schemas/register";
+import { useTranslation } from "react-i18next";
 
 const RegisterPage = () => {
 
   const { register } = useAuth();
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const formik = useFormik({
     initialValues: {
@@ -26,8 +28,8 @@ const RegisterPage = () => {
     <section className="login-page">
       <div className="login__main">
         <div className="login__header">
-          <h2>Sign Up</h2>
-          <p>Already have an account? <Link to="/login">Login</Link></p>
+          <h2>{t("Register")}</h2>
+          <p>{t("Already-Registered")} <Link to="/login">{t("Login")}</Link></p>
         </div>
         <form onSubmit={formik.handleSubmit} className="login__form">
           <div className="input__field">
@@ -35,7 +37,7 @@ const RegisterPage = () => {
               type="text"
               id="username"
               name="username"
-              placeholder="Username"
+              placeholder={t("Username")}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.username}
@@ -49,7 +51,7 @@ const RegisterPage = () => {
               type="text"
               id="email"
               name="email"
-              placeholder="Email"
+              placeholder={t("Email")}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.email}
@@ -64,7 +66,7 @@ const RegisterPage = () => {
               type="password"
               id="password"
               name="password"
-              placeholder="Password"
+              placeholder={t("Password")}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.password}
@@ -75,7 +77,7 @@ const RegisterPage = () => {
           </div>
 
 
-          <button type="submit" className="login__btn">Register</button>
+          <button type="submit" className="login__btn">{t("Register")}</button>
         </form>
       </div>
     </section>

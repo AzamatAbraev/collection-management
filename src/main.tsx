@@ -1,7 +1,10 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+import App from './App.tsx';
+
+import './languages/i18n.ts';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.scss'
