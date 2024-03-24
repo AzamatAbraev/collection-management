@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { NavLink, useNavigate, Link } from "react-router-dom";
 import { AutoComplete } from "antd";
 
@@ -9,13 +9,21 @@ import CollectionType from "../../../types/collection";
 import { useTranslation } from "react-i18next";
 import i18n from 'i18next';
 
+import menuIcon from "../../../assets/menu-icon.svg";
 
-const Header: React.FC = () => {
+import "./Header.scss"
+import useScreenSize from "../../../utils/getScreenSize";
+
+
+const Header = () => {
   const [options, setOptions] = useState([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isAuthenticated, user, language, setLanguage, logout } = useAuth();
+
+  const screenSize = useScreenSize();
 
   const fetchSearchResults = async (searchText: string) => {
     if (!searchText.trim()) {
@@ -54,9 +62,50 @@ const Header: React.FC = () => {
     localStorage.setItem('LANGUAGE', event.target.value);
   };
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const renderNavLinks = () => (
+    <Fragment>
+      <li className="nav-item">
+        <NavLink to="/" className={({ isActive }) => "nav-link" + (isActive ? " text-danger" : " text-white")}>{t('Home')}</NavLink>
+      </li>
+      <li className="nav-item">
+        <NavLink to="/allcollections" className={({ isActive }) => "nav-link" + (isActive ? " text-danger" : " text-white")}>{t('Collections')}</NavLink>
+      </li>
+      <li className="menu-selector">
+        <select value={language} onChange={switchLanguage} className="form-select form-select-sm">
+          <option value="en">EN</option>
+          <option value="uz">UZ</option>
+          <option value="ru">RU</option>
+        </select>
+      </li>
+      {isAuthenticated ? (
+        <div className="d-flex align-items-center gap-2 menu-links">
+          <li className="nav-item">
+            <NavLink className="btn btn-light" to="/user/dashboard">{user?.name}</NavLink>
+          </li>
+          <li className="nav-item">
+            <button className="btn btn-light" onClick={() => logout(navigate)}>{t('Logout')}</button>
+          </li>
+        </div>
+      ) : (
+        <div className="d-flex align-items-center gap-2 menu-links">
+          <li className="nav-item">
+            <NavLink className="btn btn-light" to="/login">{t('Login')}</NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink className="btn btn-light" to="/register">{t('Register')}</NavLink>
+          </li>
+        </div>
+      )}
+    </Fragment>
+  );
+
   return (
-    <header className="bg-primary text-white fixed-top">
-      <nav className="container d-flex justify-content-between align-items-center py-2">
+    <header className="main-header text-white fixed-top">
+      <nav className="container-manual d-flex justify-content-between align-items-center py-2">
         <Link to="/" className="navbar-brand text-white fs-3">MyBox</Link>
         <div className="flex-grow-1 px-3">
           <AutoComplete
@@ -68,43 +117,18 @@ const Header: React.FC = () => {
             placeholder={t("Search")}
           />
         </div>
-        <ul className="nav">
-          <li className="nav-item">
-            <NavLink to="/" className={({ isActive }) => "nav-link" + (isActive ? " text-danger" : " text-white")}>{t('Home')}</NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/about" className={({ isActive }) => "nav-link" + (isActive ? " text-danger" : " text-white")}>{t('About')}</NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/allcollections" className="nav-link text-white">{t('Collections')}</NavLink>
-          </li>
-          <div>
-            <select value={language} onChange={switchLanguage} className="form-select form-select-sm">
-              <option value="en">EN</option>
-              <option value="uz">UZ</option>
-              <option value="ru">RU</option>
-            </select>
-          </div>
-          {isAuthenticated ? (
-            <div className="d-flex align-items-center gap-2">
-              <li className="nav-item">
-                <NavLink className="btn btn-light" to="/user/dashboard">{user?.name}</NavLink>
-              </li>
-              <li className="nav-item">
-                <button className="btn btn-light" onClick={() => logout(navigate)}>{t('Logout')}</button>
-              </li>
+        <button className="menu-toggle" onClick={toggleMenu}>
+          <img src={menuIcon} alt="Menu" />
+        </button>
+        {screenSize > 768 ? (
+          <ul className="nav">{renderNavLinks()}</ul>
+        ) : (
+          isMenuOpen && (
+            <div className="mobile-nav">
+              <ul className="nav flex-column">{renderNavLinks()}</ul>
             </div>
-          ) : (
-            <div className="d-flex align-items-center gap-2">
-              <li className="nav-item">
-                <NavLink className="btn btn-light" to="/login">{t('Login')}</NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="btn btn-light" to="/register">{t('Register')}</NavLink>
-              </li>
-            </div>
-          )}
-        </ul>
+          )
+        )}
       </nav>
     </header>
   );

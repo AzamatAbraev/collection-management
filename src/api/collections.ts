@@ -8,6 +8,11 @@ const getCollections = async () => {
   return data;
 };
 
+const getLargestCollections = async () => {
+  const { data } = await request.get("collections/largest");
+  return data;
+};
+
 const getUserCollections = async ({
   queryKey,
 }: QueryFunctionContext<MyQueryKey>) => {
@@ -17,4 +22,4 @@ const getUserCollections = async ({
   return data;
 };
 
-export { getCollections, getUserCollections };
+export { getCollections, getUserCollections, getLargestCollections };

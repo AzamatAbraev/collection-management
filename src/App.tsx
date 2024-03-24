@@ -4,7 +4,6 @@ import FrontLayout from "./components/layout/front"
 import HomePage from "./pages/public/home"
 import LoginPage from "./pages/auth/login"
 import RegisterPage from "./pages/auth/register"
-import AboutPage from "./pages/public/about"
 import AllCollections from "./pages/public/all-collections"
 import ContactPage from "./pages/public/contact"
 import AdminDashboard from "./pages/admin/dashboard"
@@ -31,7 +30,6 @@ function App() {
       <Routes>
         <Route element={<FrontLayout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
           <Route path="/allcollections" element={<AllCollections />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />

@@ -1,0 +1,73 @@
+@use "../../../general-styles/Variables.scss" as vrb;
+
+.main-header {
+  background-color: vrb.$main;
+  border-bottom: 5px solid #4ea3e4;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  z-index: 10;
+}
+
+.main-header {
+  position: relative;
+}
+
+.menu-toggle {
+  display: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.menu-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 10px;
+}
+
+.mobile-nav {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: vrb.$main;
+  color: #000;
+  z-index: 10;
+  padding-bottom: 20px;
+
+  .nav {
+    flex-direction: column;
+    gap: 10px;
+    .nav-item {
+      display: block;
+      width: 100%;
+      .nav-link {
+        display: block;
+        // padding: 10px 15px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .mobile-nav {
+    display: block;
+    align-items: center;
+    text-align: center;
+  }
+
+  .menu-links {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .menu-selector {
+    margin: auto;
+  }
+}

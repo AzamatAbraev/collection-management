@@ -9,7 +9,39 @@
   gap: 20px;
 }
 
-.home__title {
-  font-size: 40px;
-  padding-top: 30px;
+.collection-list-username {
+  margin-top: 1rem;
+  font-style: italic;
+  text-transform: capitalize;
+}
+
+.collection-list-item {
+  margin-bottom: 10px !important;
+}
+
+.collection-list-image {
+  width: 272px;
+}
+
+@media (max-width: 992px) {
+  .collection-image {
+    height: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .collection-list {
+    &-item {
+      flex-direction: column-reverse;
+    }
+    &-image {
+      width: 100%;
+      height: auto;
+    }
+
+    .ant-list-item-extra {
+      margin: 0 !important;
+      margin-bottom: 10px !important;
+    }
+  }
 }

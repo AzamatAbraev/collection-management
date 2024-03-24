@@ -4,8 +4,12 @@ interface CollectionType {
   name: string;
   description: string;
   category: string;
-  userId: string;
+  userId: {
+    _id: string;
+    username: string;
+  };
   image?: string;
+  itemCount: number;
   customFields?: [{ fieldType: string; fieldName: string }];
 }
 

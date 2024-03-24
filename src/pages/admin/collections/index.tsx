@@ -100,6 +100,11 @@ const AdminCollections = () => {
       render: (userId: string) => <p>{getUserById(userId)}</p>
     },
     {
+      title: 'Item Count',
+      dataIndex: 'itemCount',
+      key: 'itemCount',
+    },
+    {
       title: 'Action',
       key: 'action',
       render: (_: string, data: CollectionType) => (

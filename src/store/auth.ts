@@ -22,7 +22,7 @@ const useAuth = create<AuthType>()((set) => ({
   isAuthenticated: Boolean(Cookies.get("TOKEN")),
   loading: false,
   user: JSON.parse(localStorage.getItem(USER_DATA) || "{}"),
-  language: "en",
+  language: localStorage.getItem("LANGUAGE") || "en",
   setLanguage: (language) => {
     set({ language });
   },
