@@ -57,15 +57,11 @@ const ItemPage = () => {
 
 
   const handleAddComment = async () => {
-    try {
-      if (commentContent) {
-        await request.post(`items/${itemId}/comments`, { content: commentContent });
-      }
-      setCommentContent('');
-      queryClient.invalidateQueries("comments");
-    } catch (error) {
-      console.error('Failed to submit comment:', error);
+    if (commentContent) {
+      await request.post(`items/${itemId}/comments`, { content: commentContent });
     }
+    setCommentContent('');
+    queryClient.invalidateQueries("comments");
   };
 
   const handleLikeClick = async () => {
@@ -109,12 +105,21 @@ const ItemPage = () => {
               <MessageOutlined style={{ fontSize: '25px', color: seeComments ? 'red' : '' }} />
             </button>
           </div>
-          <div style={{ minHeight: "20px", cursor: "pointer" }}>
+          <div style={{ minHeight: "10px", cursor: "pointer" }}>
             <Popover placement='topLeft' content={likeContent}>
               {item.likes.length > 0 ? <p style={{ margin: "0px" }}>{item.likes.length} {item.likes.length > 1 ? "likes" : "like"}</p> : ""}
             </Popover>
           </div>
           <h3>{item?.name}</h3>
+          {item.customValues && Object.keys(item.customValues).length > 0 && (
+            <div className="item-custom-fields">
+              {Object.entries(item.customValues).map(([fieldName, fieldValue]) => (
+                <div key={fieldName} className="custom-field">
+                  <strong>{fieldName}:</strong> {fieldValue as string}
+                </div>
+              ))}
+            </div>
+          )}
           <p style={{ color: "blue" }}>#{item?.tags?.join(', #')}</p>
         </div>
         <div className="item__comments">

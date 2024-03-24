@@ -39,5 +39,18 @@
   "Hide-Comments": "Izohlarni yashirish",
   "Write-Comment": "Izoh yozish",
   "Add-Comment": "Izoh qo'shish",
-  "Search": "Qidirish"
+  "Search": "Qidirish",
+  "Users": "Foydalanuvchilar",
+  "Items": "Narsalar",
+  "Comments": "Izohlar",
+  "Recent-Comments": "So'nggi Izohlar",
+  "Joined-On": "Qo'shilgan sana",
+  "Posted-On": "Joylangan sana",
+  "Recent-Users": "So'nggi Foydalanuvchilar",
+  "Role": "Rol",
+  "Status": "Holat",
+  "Promote": "Admin Qilish",
+  "Block": "Blok",
+  "Unblock": "Blokdan chiqarish",
+  "Demote": "Foydalanuvchi qilish"
 }

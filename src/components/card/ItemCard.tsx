@@ -1,85 +1,82 @@
-import { useQuery, useQueryClient } from 'react-query';
-import { LikeFilled, LikeOutlined, MessageOutlined } from '@ant-design/icons';
-import { Skeleton, message } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import { Card, Skeleton, Button, Tooltip } from 'antd';
+import { LikeFilled, LikeOutlined, MessageOutlined } from '@ant-design/icons';
 
 import bookImg from '../../assets/book.webp';
 import ItemType from '../../types/item';
-import request from '../../server';
 import useItems from '../../store/items';
 import useAuth from '../../store/auth';
 
-const ItemCard = (item: ItemType) => {
-  const { user } = useAuth()
+const { Meta } = Card;
 
+const ItemCard = (item: ItemType) => {
+  const { user } = useAuth();
   const [liked, setLiked] = useState(item.likes.includes(user.userId));
   const [commented, setCommented] = useState(false);
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
-
   const queryClient = useQueryClient();
-
   const { likeItem, unlikeItem } = useItems();
-
-  const queryKey = ['itemData', item.collectionId, item.userId];
-
-  const { data, isLoading } = useQuery(queryKey, async () => {
-    const [collectionResponse, userResponse] = await Promise.all([
-      request.get(`collections/${item.collectionId}`),
-      request.get(`users/${item.userId}`),
-    ]);
-    return {
-      collectionName: collectionResponse.data.name,
-      author: userResponse.data.username,
-    };
-  }, {
-    onError: (err) => {
-      message.error('Failed to fetch data' + err);
-    }
-  });
 
   const handleLikeClick = async () => {
     if (liked) {
       await unlikeItem(item._id);
-      setLiked(false)
+      setLiked(false);
     } else {
       await likeItem(item._id);
-      setLiked(true)
+      setLiked(true);
     }
     queryClient.invalidateQueries("latestItems");
-  }
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => {
+      setLoading(false)
+    }, 1000)
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [])
 
   return (
-    <div className="card mb-3">
-      <div className="card-img-top" onClick={() => navigate(`collection/${item.collectionId}/${item._id}`)} style={{ cursor: 'pointer' }}>
-        <img src={item.photo || bookImg} alt="Book" style={{ width: "100%", height: "300px", objectFit: "cover" }} className="img-fluid" />
-      </div>
-      <div className="card-body">
-        <div className="d-flex">
-          <button onClick={handleLikeClick} className="btn p-1">
-            {liked ? <LikeFilled style={{ fontSize: '25px', color: 'red' }} /> : <LikeOutlined style={{ fontSize: '25px' }} />}
-          </button>
-          <button onClick={() => setCommented(!commented)} className="btn p-1">
-            <MessageOutlined style={{ fontSize: '25px', color: commented ? 'red' : '' }} />
-          </button>
+    <Card
+      hoverable
+      style={{ width: "100%", margin: 'auto' }}
+      cover={
+        <img
+          alt="Book"
+          src={item.photo || bookImg}
+          onClick={() => navigate(`/collection/${item.collectionId}/${item._id}`)}
+          style={{ height: 300, objectFit: 'cover' }}
+        />
+      }
+      actions={[
+        <Tooltip title={`${item.likes.length} ${item.likes.length === 1 ? 'like' : 'likes'}`}>
+          <Button onClick={handleLikeClick} type="text" icon={liked ? <LikeFilled style={{ color: 'red' }} /> : <LikeOutlined />} />
+        </Tooltip>,
+        <Button onClick={() => setCommented(!commented)} type="text" icon={<MessageOutlined style={{ color: commented ? 'red' : undefined }} />} />,
+      ]}
+    >
+      <Skeleton loading={loading} active>
+        <Meta
+          title={item.name}
+        />
+        {<p>{item.collectionId.name}</p>}
+        {<p style={{ textTransform: "capitalize" }}>Published by {item.userId.username}</p>}
+        <div className="custom-fields">
+          {item.customValues ? Object.entries(item.customValues).map(([fieldName, fieldValue]) => (
+            <div key={fieldName} className="custom-field">
+              <strong>{fieldName}:</strong> {fieldValue.toString()}
+            </div>
+          )) : <div className="placeholder" style={{ height: '50px' }}></div>}
         </div>
-        <Skeleton loading={isLoading} active>
-          <div style={{ minHeight: "20px", cursor: "pointer" }}>
-            {item.likes.length > 0 ? <p style={{ margin: "0px" }}>{item.likes.length} {item.likes.length > 1 ? "likes" : "like"}</p> : ""}
-          </div>
-          <div className="card-title mt-3">
-            <h5 className='fs-3'>{item.name}</h5>
-          </div>
-          <div className="d-flex align-items-center justify-content-between card-text">
-            <p>{data?.collectionName}</p>
-            <p>{data?.author}</p>
-          </div>
-          <div className="mt-2">
-            {item?.tags.map((tag, key) => <span key={key} className="badge bg-secondary me-1">#{tag}</span>)}
-          </div>
-        </Skeleton>
-      </div>
-    </div>
+        {item?.tags.map((tag, key) => <span key={key} className="badge bg-secondary me-1">#{tag}</span>)}
+      </Skeleton>
+    </Card>
   );
 };
 

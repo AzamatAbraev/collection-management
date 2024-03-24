@@ -12,6 +12,7 @@ import UserType from '../../../types/user';
 import "./style.scss";
 import useAuth from '../../../store/auth';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const AdminUsers = () => {
   const queryClient = useQueryClient();
@@ -36,6 +37,8 @@ const AdminUsers = () => {
   const { data: users, isLoading } = useQuery(["users", search], () => fetchUsers(), {
     keepPreviousData: true,
   });
+
+  const { t } = useTranslation()
 
   const handleDelete = async () => {
     if (selectedRowKeys.length > 0) {
@@ -138,42 +141,42 @@ const AdminUsers = () => {
 
   const columns: TableProps['columns'] = [
     {
-      title: 'Username',
+      title: t('Username'),
       dataIndex: 'username',
       key: 'username',
       render: (text: string, data: UserType) => <p style={{ textTransform: "capitalize" }}>{text} {data._id === user.userId ? "(You)" : ""}</p>,
     },
     {
-      title: 'Email',
+      title: t('Email'),
       dataIndex: 'email',
       key: 'email',
     },
     {
-      title: 'Role',
+      title: t('Role'),
       dataIndex: 'role',
       key: 'role',
       sorter: (a, b) => a.role.localeCompare(b.role),
       render: (role: string) => <Tag color={role === "admin" ? "red" : "blue"}>{role}</Tag>,
     },
     {
-      title: 'Status',
+      title: t('Status'),
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => <Tag color={status === "blocked" ? "red" : "green"}>{status}</Tag>,
     },
     {
-      title: 'Joined',
+      title: t('Joined-On'),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (date: string) => <p>{convertTime(date)}</p>,
     },
     {
-      title: 'Action',
+      title: t('Action'),
       key: 'action',
       render: (_, data) => (
         <Space size="middle">
-          <Button onClick={() => handleEdit(data._id)}><EditOutlined /></Button>
-          <Button onClick={() => handleRole(data._id, data.role)}>{data.role === "admin" ? "Demote" : "Promote"}</Button>
+          <Button className='d-flex align-items-center' type='primary' onClick={() => handleEdit(data._id)}><EditOutlined /></Button>
+          <Button className='d-flex align-items-center' onClick={() => handleRole(data._id, data.role)}>{data.role === "admin" ? t("Demote") : t("Promote")}</Button>
         </Space>
       ),
     },
@@ -181,12 +184,12 @@ const AdminUsers = () => {
 
   return (
     <div>
-      <h1 style={{ padding: "20px 0px" }}>Users</h1>
-      <Space style={{ marginBottom: 16 }}>
-        <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Searching.." />
-        <Button danger onClick={handleBlock} ><LockOutlined />Block</Button>
-        <Button className='unblock__btn' style={{ color: "green" }} onClick={handleUnblock}><UnlockOutlined />Unblock</Button>
-        <Button type='primary' danger onClick={handleDelete}><DeleteOutlined /> Delete</Button>
+      <h1 className='pt-2 pb-2'>Users</h1>
+      <Space className='controllers-bar mb-3'>
+        <Input className='users-search' value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("Search")} />
+        <Button className='d-flex align-items-center' danger onClick={handleBlock} ><LockOutlined />{t("Block")}</Button>
+        <Button className='unblock__btn d-flex align-items-center' style={{ color: "green" }} onClick={handleUnblock}><UnlockOutlined />{t("Unblock")}</Button>
+        <Button className='d-flex align-items-center' type='primary' danger onClick={handleDelete}><DeleteOutlined /> {t("Delete")}</Button>
       </Space>
       <Table
         rowSelection={{
@@ -195,8 +198,10 @@ const AdminUsers = () => {
         }}
         bordered
         key={tableKey}
+        pagination={{ pageSize: 7 }}
+
         scroll={{
-          x: 1000,
+          x: 700,
         }}
         loading={isLoading}
         columns={columns}

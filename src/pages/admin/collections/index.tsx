@@ -4,9 +4,10 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import request from '../../../server';
 import CollectionType from '../../../types/collection';
-import useUsers from '../../../hooks/useUsers';
 import useCollection from '../../../store/collections';
-import { EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+
+import "./style.scss"
 
 const AdminCollections = () => {
   const queryClient = useQueryClient();
@@ -18,8 +19,6 @@ const AdminCollections = () => {
   const [search, setSearch] = useState("")
 
   const [form] = Form.useForm();
-
-  const { getUserById } = useUsers();
 
   const { deleteCollection } = useCollection();
 
@@ -97,7 +96,7 @@ const AdminCollections = () => {
       title: 'Author',
       dataIndex: 'userId',
       key: 'userId',
-      render: (userId: string) => <p>{getUserById(userId)}</p>
+      render: (user: { _id: string, username: string }) => <p>{user.username}</p>
     },
     {
       title: 'Item Count',
@@ -109,7 +108,7 @@ const AdminCollections = () => {
       key: 'action',
       render: (_: string, data: CollectionType) => (
         <Space size="middle">
-          <Button type='primary' onClick={() => handleEdit(data._id)}><EditOutlined />Edit</Button>
+          <Button className='d-flex align-items-center' type='primary' onClick={() => handleEdit(data._id)}><EditOutlined />Edit</Button>
         </Space>
       ),
     },
@@ -117,14 +116,15 @@ const AdminCollections = () => {
 
   return (
     <div>
-      <h1 style={{ padding: "20px 0px" }}>Collections</h1>
-      <Space style={{ marginBottom: 16 }}>
-        <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Searching.." />
-        <Button type='primary' danger onClick={handleDelete} >Delete</Button>
+      <h1 className='pt-2 pb-2'>Collections</h1>
+      <Space className='mb-3 d-flex'>
+        <Input className='collections-search' value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Searching.." />
+        <Button className='d-flex align-items-center' type='primary' danger onClick={handleDelete} ><DeleteOutlined />Delete</Button>
       </Space>
       <Table
         key={tableKey}
         columns={columns}
+        pagination={{ pageSize: 7 }}
         rowSelection={{
           type: "checkbox",
           ...rowSelection,
@@ -132,7 +132,7 @@ const AdminCollections = () => {
         bordered
         dataSource={collections?.map((collection: CollectionType) => ({ ...collection, key: collection._id }))}
         loading={isLoading}
-        scroll={{ x: 1000 }}
+        scroll={{ x: 700 }}
       />
       <Modal
         title="Edit Collection"

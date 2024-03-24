@@ -5,9 +5,14 @@ const getLatestItems = async () => {
   return data;
 };
 
+const getAllItems = async () => {
+  const { data } = await request.get("items");
+  return data;
+};
+
 const getSingleItem = async (itemId: string) => {
   const { data } = await request.get(`items/${itemId}`);
   return data;
 };
 
-export { getLatestItems, getSingleItem };
+export { getLatestItems, getSingleItem, getAllItems };

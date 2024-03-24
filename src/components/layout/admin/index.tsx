@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import {
   ClockCircleOutlined,
-  DatabaseOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   ReadOutlined,
@@ -19,13 +18,23 @@ import { Content, Header } from "antd/es/layout/layout";
 
 import "./style.scss";
 import useAuth from "../../../store/auth";
+import useScreenSize from "../../../utils/getScreenSize";
+import { useTranslation } from "react-i18next";
 
 const AdminLayout = () => {
   const { pathname } = useLocation();
   const { logout } = useAuth();
+  const screenSize = useScreenSize()
+  const { t } = useTranslation()
 
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (screenSize < 768) {
+      setCollapsed(true)
+    }
+  }, [screenSize])
 
   return (
     <Layout>
@@ -49,7 +58,7 @@ const AdminLayout = () => {
               icon: <UserOutlined />,
               label: (
                 <Link to="dashboard">
-                  Dashboard
+                  {t("Dashboard")}
                 </Link>
               ),
             },
@@ -58,7 +67,7 @@ const AdminLayout = () => {
               icon: <TeamOutlined />,
               label: (
                 <Link to="users">
-                  Users
+                  {t("Users")}
                 </Link>
               ),
             },
@@ -69,7 +78,7 @@ const AdminLayout = () => {
                 <Link
                   to="collections"
                 >
-                  Collections
+                  {t("Collections")}
                 </Link>
               ),
             },
@@ -80,17 +89,7 @@ const AdminLayout = () => {
                 <Link
                   to="items"
                 >
-                  Items
-                </Link>
-              ),
-            },
-            {
-              key: "/comments",
-              icon: <DatabaseOutlined />,
-              label: (
-                <Link to="comments"
-                >
-                  Comments
+                  {t("Items")}
                 </Link>
               ),
             },
@@ -108,7 +107,7 @@ const AdminLayout = () => {
                     })
                   }
                 >
-                  {!collapsed ? "Logout" : <LogoutOutlined />}
+                  {!collapsed ? t("Logout") : <LogoutOutlined />}
                 </Button>
               ),
             },

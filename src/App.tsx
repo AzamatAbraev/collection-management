@@ -21,7 +21,6 @@ import "slick-carousel/slick/slick-theme.css";
 import useAuth from "./store/auth"
 import AccountPage from "./pages/auth/account"
 import AdminItems from "./pages/admin/items"
-import AdminComments from "./pages/admin/comments"
 
 function App() {
   const { isAuthenticated, role } = useAuth();
@@ -44,7 +43,6 @@ function App() {
           <Route path="/admin/collections" element={<AdminCollections />} />
           <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/admin/items" element={<AdminItems />} />
-          <Route path="/admin/comments" element={<AdminComments />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />}></Route>

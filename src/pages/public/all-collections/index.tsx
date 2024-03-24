@@ -1,11 +1,24 @@
 import { useEffect, useState } from "react";
-import CollectionListCard from "../../../components/card/CollectionListCard";
-import useCollection from "../../../store/collections";
-import request from "../../../server";
-import CollectionType from "../../../types/collection";
+import { Card, Col, Input, Row, Select, Spin, Tooltip } from "antd";
 import { useQuery } from "react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+
+import request from "../../../server";
+import CollectionType from "../../../types/collection";
+
+import booksImage from "../../../assets/books-category.webp"
+import artsImage from "../../../assets/art-category.webp"
+import sportsImage from "../../../assets/sports-category.avif"
+import coinsImage from "../../../assets/coins-category.webp"
+import othersImage from "../../../assets/other-category.webp";
+
+interface CategoryNameType {
+  [key: string]: string;
+}
+const { Option } = Select;
+
+import "./style.scss"
 
 const AllCollections = () => {
   const location = useLocation();
@@ -27,14 +40,6 @@ const AllCollections = () => {
 
   const { data: collections, isLoading } = useQuery(['collections', location.search], fetchCollections);
 
-  const { setCollections } = useCollection();
-
-  useEffect(() => {
-    if (collections) {
-      setCollections(collections);
-    }
-  }, [collections, setCollections]);
-
   useEffect(() => {
     const params = new URLSearchParams();
     if (search) params.set("search", search);
@@ -42,30 +47,66 @@ const AllCollections = () => {
     navigate({ search: params.toString() }, { replace: true });
   }, [search, category, navigate]);
 
+  const categoryImages: CategoryNameType = {
+    Books: booksImage,
+    Coins: coinsImage,
+    Arts: artsImage,
+    Sports: sportsImage,
+    Others: othersImage
+  }
+
   return (
-    <section id="allcollections">
-      <div className="container py-5">
-        <div className="d-flex gap-3 mb-3">
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("Search")} type="text" className="form-control" />
-          <select value={category} onChange={(e) => setCategory(e.target.value)} style={{ width: "200px" }} className="form-select">
-            <option value="">{t("All")}</option>
-            <option value="Books">{t("Books")}</option>
-            <option value="Coins">{t("Coins")}</option>
-            <option value="Art">{t("Art")}</option>
-            <option value="Sports">{t("Sports")}</option>
-            <option value="Other">{t("Other")}</option>
-          </select>
-        </div>
+    <section id="allcollections" style={{ padding: "2rem 0" }}>
+      <div className="container">
+        <Row gutter={[16, 16]} className="mb-3">
+          <Col span={12}>
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={t("Search")}
+            />
+          </Col>
+          <Col span={12}>
+            <Select
+              value={category}
+              onChange={(value) => setCategory(value)}
+              style={{ width: "100%" }}
+              placeholder={t("Select a category")}
+            >
+              <Option value="">{t("All")}</Option>
+              <Option value="Books">{t("Books")}</Option>
+              <Option value="Coins">{t("Coins")}</Option>
+              <Option value="Art">{t("Art")}</Option>
+              <Option value="Sports">{t("Sports")}</Option>
+              <Option value="Other">{t("Other")}</Option>
+            </Select>
+          </Col>
+        </Row>
         {isLoading ? (
-          <p>Loading...</p>
-        ) : (
-          <div className="row">
-            {collections.map((collection: CollectionType) => (
-              <div key={collection._id} className="col-lg-4 col-md-6 col-sm-12 mb-4">
-                <CollectionListCard {...collection} />
-              </div>
-            ))}
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Spin />
           </div>
+        ) : (
+          <Row gutter={[16, 16]}>
+            {collections?.map((collection: CollectionType) => (
+              <Col key={collection._id} xs={24} sm={12} md={8} lg={6}>
+                <Card
+                  className="allcollections-card"
+                  hoverable
+                  cover={<img style={{ width: "100%", "height": "200px" }} alt="Category" src={categoryImages[collection.category] || categoryImages["Others"]} />}
+                  onClick={() => navigate(`/collection/${collection._id}`)}
+                >
+                  <Card.Meta title={collection.name} description={
+                    <Tooltip title={collection.description}>
+                      <div style={{ minHeight: "66px" }} className="ant-card-meta-description">
+                        {collection.description}
+                      </div>
+                    </Tooltip>
+                  } />
+                </Card>
+              </Col>
+            ))}
+          </Row>
         )}
       </div>
     </section>

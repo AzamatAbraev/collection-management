@@ -16,16 +16,16 @@ import sportsImage from "../../../assets/sports-category.avif"
 import coinsImage from "../../../assets/coins-category.webp"
 import othersImage from "../../../assets/other-category.webp";
 
-import './style.scss';
-
 interface CategoryNameType {
   [key: string]: string;
 }
 
+
+import './style.scss';
+
 const HomePage = () => {
   const { t } = useTranslation();
   const { data: largestCollections, isLoading } = useQuery('largestCollections', getLargestCollections);
-  console.log(largestCollections);
 
 
   const IconText = ({ icon, text }: { icon: React.FC, text: string }) => (

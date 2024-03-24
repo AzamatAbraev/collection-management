@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { Table, Button, Modal, Form, Input, Space, message } from 'antd';
 import { useQuery, useQueryClient } from 'react-query';
-import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 import request from '../../../server';
 import CollectionType from '../../../types/collection';
-import useUsers from '../../../hooks/useUsers';
-import useCollections from '../../../hooks/useCollections';
 import useItems from '../../../store/items';
 import ItemType from '../../../types/item';
 
@@ -23,8 +21,6 @@ const AdminItems = () => {
 
   const [form] = Form.useForm();
 
-  const { getUserById } = useUsers();
-  const { getCollectionById } = useCollections();
   const { deleteItem } = useItems()
 
   const fetchItems = async () => {
@@ -103,21 +99,21 @@ const AdminItems = () => {
       title: 'Collection',
       dataIndex: 'collectionId',
       key: 'collectionId',
-      render: (collectionId: string) => <p>{getCollectionById(collectionId)}</p>
+      render: (collection: { name: string }) => <p>{collection.name}</p>
 
     },
     {
       title: 'Author',
       dataIndex: 'userId',
       key: 'userId',
-      render: (userId: string) => <p>{getUserById(userId)}</p>
+      render: (user: { _id: string, username: string }) => <p>{user.username}</p>
     },
     {
       title: 'Action',
       key: 'action',
       render: (_: string, data: ItemType) => (
         <Space size="middle">
-          <Button onClick={() => handleEdit(data._id)}><EditOutlined />Edit</Button>
+          <Button className='d-flex align-items-center' type='primary' onClick={() => handleEdit(data._id)}><EditOutlined />Edit</Button>
         </Space>
       ),
     },
@@ -125,10 +121,10 @@ const AdminItems = () => {
 
   return (
     <div>
-      <h1 style={{ padding: "20px 0px" }}>Items</h1>
-      <Space style={{ marginBottom: 16 }}>
-        <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Searching.." />
-        <Button type='primary' danger onClick={handleDelete} >Delete</Button>
+      <h1 className='pt-2 pb-2'>Items</h1>
+      <Space className='mb-3'>
+        <Input className='collections-search' value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Searching.." />
+        <Button className='d-flex align-items-center' type='primary' danger onClick={handleDelete} ><DeleteOutlined />Delete</Button>
       </Space>
       <Table
         columns={columns}
@@ -139,7 +135,7 @@ const AdminItems = () => {
         key={tableKey}
         dataSource={items?.map((collection: CollectionType) => ({ ...collection, key: collection._id }))}
         loading={isLoading}
-        scroll={{ x: 1000 }}
+        scroll={{ x: 700 }}
         pagination={{ pageSize: 7 }}
         bordered
       />

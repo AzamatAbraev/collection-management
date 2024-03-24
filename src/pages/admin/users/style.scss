@@ -7,3 +7,19 @@
     border: 1px solid #76dc28 !important;
   }
 }
+
+.users-search {
+  width: 400px;
+}
+
+@media (max-width: 600px) {
+  .controllers-bar {
+    flex-wrap: wrap;
+  }
+
+  .controllers-bar {
+    .users-search {
+      width: 100% !important;
+    }
+  }
+}

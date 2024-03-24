@@ -1,6 +1,6 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { NavLink, useNavigate, Link } from "react-router-dom";
-import { AutoComplete } from "antd";
+import { AutoComplete, Switch } from "antd";
 
 import useAuth from "../../../store/auth";
 import request from "../../../server";
@@ -13,6 +13,8 @@ import menuIcon from "../../../assets/menu-icon.svg";
 
 import "./Header.scss"
 import useScreenSize from "../../../utils/getScreenSize";
+import useTheme from "../../../store/theme";
+import { MoonOutlined, SunOutlined } from "@ant-design/icons";
 
 
 const Header = () => {
@@ -21,7 +23,8 @@ const Header = () => {
 
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { isAuthenticated, user, language, setLanguage, logout } = useAuth();
+  const { role, isAuthenticated, user, language, setLanguage, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme()
 
   const screenSize = useScreenSize();
 
@@ -66,6 +69,22 @@ const Header = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      document.body.classList.add(savedTheme);
+    }
+  }, []);
+
+  useEffect(() => {
+    const themeClass = theme === 'dark' ? 'dark-theme' : 'light-theme';
+    const removeClass = theme === 'dark' ? 'light-theme' : 'dark-theme';
+    document.body.classList.remove(removeClass);
+    document.body.classList.add(themeClass);
+
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
   const renderNavLinks = () => (
     <Fragment>
       <li className="nav-item">
@@ -81,14 +100,25 @@ const Header = () => {
           <option value="ru">RU</option>
         </select>
       </li>
+      <li className="nav-item">
+        <Switch
+          checkedChildren={<MoonOutlined />}
+          unCheckedChildren={<SunOutlined />}
+          checked={theme === 'dark'}
+          onChange={toggleTheme}
+          className="theme-switch"
+        />
+      </li>
       {isAuthenticated ? (
         <div className="d-flex align-items-center gap-2 menu-links">
           <li className="nav-item">
-            <NavLink className="btn btn-light" to="/user/dashboard">{user?.name}</NavLink>
+            <NavLink style={{ textTransform: "capitalize" }} className="btn btn-light" to="/user/dashboard">{user?.name}</NavLink>
           </li>
-          <li className="nav-item">
+          {role === "admin" ? <li className="nav-item">
+            <Link to="/admin/dashboard" className="btn btn-light" >Dashboard</Link>
+          </li> : <li className="nav-item">
             <button className="btn btn-light" onClick={() => logout(navigate)}>{t('Logout')}</button>
-          </li>
+          </li>}
         </div>
       ) : (
         <div className="d-flex align-items-center gap-2 menu-links">

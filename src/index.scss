@@ -1,7 +1,36 @@
+@use "./general-styles/Variables.scss" as vrb;
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
-
 :root {
   scroll-behavior: smooth;
+}
+
+.dark-theme {
+  background-color: vrb.$main-dark;
+  color: #fff;
+
+  .main-header {
+    background-color: vrb.$main-dark;
+    border-bottom: 0px;
+  }
+
+  .collection-list-item {
+    background-color: #fff;
+  }
+
+  .item {
+    background-color: vrb.$main-dark;
+  }
+
+  .card-item {
+    color: vrb.$main-dark;
+  }
+
+  .nodata-page {
+    background-color: vrb.$main-dark;
+    p {
+      color: #fff !important;
+    }
+  }
 }
 
 * {

@@ -4,6 +4,7 @@ interface UserType {
   email: string;
   role: string;
   createdAt: string;
+  status: string,
 }
 
 export default UserType;

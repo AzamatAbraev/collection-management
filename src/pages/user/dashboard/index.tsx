@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { useNavigate, Link } from "react-router-dom";
 
-import { Empty, Form, Input, Modal, Select, Skeleton, Space, message } from "antd";
-import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Empty, Form, Input, Modal, Select, Skeleton, Space, message } from "antd";
+import { DeleteOutlined, EditOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 
 import request from "../../../server";
@@ -21,12 +21,18 @@ import "./style.scss";
 import LoadingPage from "../../loading";
 import { useTranslation } from "react-i18next";
 
+interface CustomFieldType {
+  fieldName: string,
+  fieldType: string,
+}
+
 const UserDashboard = () => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<null | string>(null)
   const [isEditLoading, setIsEditLoading] = useState(false);
   const [category, setCategory] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("")
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [customFields, setCustomFields] = useState<CustomFieldType[]>([]);
 
   const { addCollection, deleteCollection, updateCollection } = useCollection();
   const { user, role } = useAuth();
@@ -51,6 +57,14 @@ const UserDashboard = () => {
       values.category = values.newCategory;
     }
 
+    const newCustomFields = customFields.map((_, index) => ({
+      fieldName: values[`fieldName${index}`],
+      fieldType: values[`fieldType${index}`],
+    }));
+
+    values.customFields = newCustomFields;
+
+
     if (!selected) {
       values.userId = user.userId;
       await addCollection(values);
@@ -61,7 +75,7 @@ const UserDashboard = () => {
     setOpen(false);
     setCategory("")
     setSelected(null);
-
+    setCustomFields([{ fieldName: "", fieldType: "" }]);
   };
 
   const handleCancel = () => {
@@ -93,6 +107,17 @@ const UserDashboard = () => {
       setIsEditLoading(false)
     }
   }
+
+  const addCustomField = () => {
+    setCustomFields([...customFields, { fieldName: "", fieldType: "" }]);
+  };
+
+  const removeCustomField = (index: number) => {
+    const fields = [...customFields];
+    fields.splice(index, 1);
+    setCustomFields(fields);
+  };
+
 
   return (
     <section className="user">
@@ -139,7 +164,7 @@ const UserDashboard = () => {
             <button onClick={showModal} className="add__btn user__btn"><PlusOutlined style={{ fontSize: "20px" }} /> {t("New-Collection")}</button>
           </div>
         </div>
-        <table className="collection-table table-bordered">
+        <table className="collection-table">
           <thead className="table-dark">
             <tr>
               <th>{t("Name")}</th>
@@ -266,6 +291,33 @@ const UserDashboard = () => {
             >
               <TextArea />
             </Form.Item>
+            <>
+              {customFields.length > 0 && customFields.map((_, index) => (
+                <div key={index} style={{ display: "flex", marginBottom: "8px" }}>
+                  <Form.Item
+                    name={`fieldName${index}`}
+                    rules={[{ required: true, message: "Field name required" }]}
+                  >
+                    <Input placeholder="Field Name" />
+                  </Form.Item>
+                  <Form.Item
+                    name={`fieldType${index}`}
+                    rules={[{ required: true, message: "Field type required" }]}
+                  >
+                    <Select placeholder="Select a type">
+                      <Select.Option value="Integer">Integer</Select.Option>
+                      <Select.Option value="String">String</Select.Option>
+                      <Select.Option value="Boolean">Boolean</Select.Option>
+                      <Select.Option value="Date">Date</Select.Option>
+                    </Select>
+                  </Form.Item>
+                  <MinusCircleOutlined onClick={() => removeCustomField(index)} />
+                </div>
+              ))}
+              <Button type="dashed" onClick={addCustomField} block icon={<PlusOutlined />}>
+                Add Custom Field
+              </Button>
+            </>
           </Form>
         </Skeleton>
       </Modal>

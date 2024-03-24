@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { LikeFilled, LikeOutlined, MessageOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal, Skeleton, Space, message } from "antd";
+import { Button, Checkbox, DatePicker, Form, Input, InputNumber, Modal, Skeleton, Space, message } from "antd";
 
 import request from "../../../server";
 import bookImg from "../../../assets/book.webp";
@@ -12,8 +12,14 @@ import NoDataComponent from "../../../components/no-data-found";
 import useAuth from "../../../store/auth";
 import useItems from "../../../store/items";
 
-import "./style.scss";
 import { useTranslation } from "react-i18next";
+
+import "./style.scss";
+
+interface CustomField {
+  fieldName: string;
+  fieldType: string;
+}
 
 const CollectionPage = () => {
   const [liked, setLiked] = useState(false);
@@ -26,6 +32,7 @@ const CollectionPage = () => {
   const [refetch, setRefetch] = useState(false)
   const [authorId, setAuthorId] = useState("");
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [customFields, setCustomFields] = useState<CustomField[]>([]);
 
 
   const [form] = Form.useForm();
@@ -46,22 +53,35 @@ const CollectionPage = () => {
     setSelected(null)
   }
 
+
   const handleOk = async () => {
     const values = await form.validateFields();
+
+    const customValues: { [key: string]: string; } = {};
+
+    customFields.forEach((field: CustomField) => {
+      if (values[field.fieldName]) {
+        customValues[field.fieldName] = values[field.fieldName];
+      }
+      delete values[field.fieldName];
+    });
 
     if (selectedFile) {
       values.photo = selectedFile;
     }
 
+    const payload = {
+      ...values, customValues
+    }
+
     if (!selected) {
-      await addItem(values, collectionId);
+      await addItem(payload, collectionId);
     } else {
       await updateItem(selected, values)
     }
     setOpen(false);
     setSelected(null);
     setRefetch(!refetch);
-
   };
 
   const handleEdit = async (itemId: string) => {
@@ -71,6 +91,13 @@ const CollectionPage = () => {
       setSelected(itemId);
 
       const { data } = await request.get(`items/${itemId}`);
+      if (data.customValues) {
+        customFields.forEach((field) => {
+          if (data.customValues[field.fieldName] !== undefined) {
+            data[field.fieldName] = data.customValues[field.fieldName];
+          }
+        });
+      }
       setSelectedFile(data.photo)
       form.setFieldsValue(data);
 
@@ -108,6 +135,7 @@ const CollectionPage = () => {
         const { data } = await request.get(`collections/${collectionId}`)
         setCollectionName(data.name);
         setAuthorId(data.userId)
+        setCustomFields(data.customFields || [])
       } finally {
         setDataLoading(false)
       }
@@ -119,8 +147,21 @@ const CollectionPage = () => {
     getItemsByCollection(collectionId)
   }, [getItemsByCollection, collectionId, refetch])
 
-  return (
 
+  const renderInputs = (field: { fieldType: string, fieldName: string }) => {
+    switch (field.fieldType) {
+      case "Integer":
+        return <InputNumber />
+      case "Boolean":
+        return <Checkbox>{field.fieldName}</Checkbox>
+      case "Date":
+        return <DatePicker />
+      default:
+        return <Input />
+    }
+  }
+
+  return (
     <Fragment>
       {loading ? <LoadingPage /> : <div className="container collection__items">
         <div className="collection__items__header">
@@ -146,6 +187,15 @@ const CollectionPage = () => {
                 <div className="d-flex gap-2 align-items-center">
                   {item?.tags.map((tag, index) => <p key={index}>#{tag}</p>)}
                 </div>
+                {item.customValues && Object.keys(item.customValues).length > 0 && (
+                  <div className="item-custom-fields">
+                    {Object.entries(item.customValues).map(([fieldName, fieldValue]) => (
+                      <div key={fieldName} className="custom-field">
+                        <strong>{fieldName}:</strong> {fieldValue.toString()}
+                      </div>
+                    ))}
+                  </div>
+                )}
                 <div className="card-item__controls">
                   {isAuthenticated && (role === 'admin' || authorId === user.userId) && (
                     <div className="d-flex align-items-center gap-2">
@@ -202,8 +252,20 @@ const CollectionPage = () => {
               <Input />
             </Form.Item>
             <Form.Item label={t("Photo")}>
-              <input placeholder="Upload an image" onChange={uploadPhoto} type="file" />
-              {selectedFile ? <img style={{ width: "100%", marginTop: "10px", height: "250px", objectFit: "cover" }} src={selectedFile} alt="image" /> : ""}
+              <label htmlFor="fileInput" className="custom-file-upload">
+                <input
+                  id="fileInput"
+                  type="file"
+                  onChange={uploadPhoto}
+                  style={{ display: 'none' }}
+                />
+                {selected ? "Change Image" : "Upload Image"}
+              </label>
+              {selectedFile && (
+                <div style={{ marginTop: 10 }}>
+                  <img src={selectedFile} alt="Uploaded" style={{ width: "100%", height: "250px", objectFit: "cover" }} />
+                </div>
+              )}
             </Form.Item>
             <Form.List
               name="tags"
@@ -240,6 +302,16 @@ const CollectionPage = () => {
                 </>
               )}
             </Form.List>
+            {customFields.map((field: { fieldName: string, fieldType: string }, index) => (
+              <Form.Item
+                key={index}
+                name={field.fieldName}
+                label={field.fieldName}
+                rules={[{ required: true, message: `${field.fieldName} is required` }]}
+              >
+                {renderInputs(field)}
+              </Form.Item>
+            ))}
           </Form>
         </Skeleton>
       </Modal>

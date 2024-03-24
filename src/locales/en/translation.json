@@ -37,5 +37,18 @@
   "Edited": "Edited",
   "See-Comments": "See Comments",
   "Hide-Comments": "Hide Comments",
-  "Searching": "Searching..."
+  "Searching": "Searching...",
+  "Users": "Users",
+  "Items": "Items",
+  "Comments": "Comments",
+  "Recent-Comments": "Recent Comments",
+  "Recent-Users": "Recent Users",
+  "Joined-On": "Joined on",
+  "Posted-On": "Posted on",
+  "Role": "Role",
+  "Status": "Status",
+  "Promote": "Promote",
+  "Block": "Block",
+  "Unblock": "Unblock",
+  "Demote": "Demote"
 }

@@ -1,0 +1,9 @@
+.collections-search {
+  width: 400px;
+}
+
+@media (max-width: 620px) {
+  .collections-search {
+    width: 100% !important;
+  }
+}

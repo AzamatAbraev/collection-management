@@ -1,12 +1,16 @@
-import { UserOutlined, EllipsisOutlined } from "@ant-design/icons";
-import CommentType from "../../types/comment";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQueryClient } from "react-query";
 import useAuth from "../../store/auth";
 import request from "../../server";
 import convertToRelativeTime from "../../utils/timeDifference";
-import { message, Input, Button, Popover, Space } from "antd";
-import { useQueryClient } from "react-query";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import CommentType from "../../types/comment";
+import { Avatar, Button, Card, Input, message, Popover, Space, Typography } from "antd";
+import { UserOutlined, EllipsisOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+
+const { Text, Paragraph } = Typography;
+
+import "./style.scss"
 
 const CommentCard = (comment: CommentType) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -14,10 +18,9 @@ const CommentCard = (comment: CommentType) => {
   const queryClient = useQueryClient();
   const { isAuthenticated, role, user } = useAuth();
 
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   const isEdited = new Date(comment.updatedAt) > new Date(comment.createdAt);
-
 
   const handleDelete = async (commentId: string) => {
     await request.delete(`items/comments/${commentId}`);
@@ -35,53 +38,57 @@ const CommentCard = (comment: CommentType) => {
   };
 
   const optionsContent = (
-    <div>
+    <Space direction="vertical">
       {isAuthenticated && (role === "admin" || comment.userId._id === user.userId) && (
         <>
           {!isEditing && (
-            <div>
-              <Button type="text" onClick={() => setIsEditing(true)}>{t("Edit")}</Button>
-              <Button type="text" onClick={() => handleDelete(comment._id)}>{t("Delete")}</Button>
-            </div>
+            <>
+              <Button type="text" onClick={() => setIsEditing(true)} icon={<EditOutlined />}>{t("Edit")}</Button>
+              <Button type="text" danger onClick={() => handleDelete(comment._id)} icon={<DeleteOutlined />}>{t("Delete")}</Button>
+            </>
           )}
         </>
       )}
-    </div>
+    </Space>
   );
 
   return (
-    <div className="d-flex align-items-center justify-content-start mb-3 p-2 bg-white rounded shadow-sm">
-      <div className="p-2 bg-secondary rounded-circle">
-        <UserOutlined style={{ fontSize: "20px", color: "#fff" }} />
-      </div>
-      <div className="d-flex flex-column ms-3 flex-grow-1">
-        <div className="d-flex justify-content-between">
-          <div className="d-flex align-items-center gap-2">
-            <h3 className="mb-0 text-capitalize fw-bold fs-5">{comment.userId.username}</h3>
-            {isEdited && <span>({t("Edited")})</span>}
-            <p className="mb-0 fs-6">{convertToRelativeTime(comment.createdAt)}</p>
-          </div>
-          {isAuthenticated && (role === "admin" || comment.userId._id === user.userId) && <Popover content={optionsContent} trigger="click">
-            <Button icon={<EllipsisOutlined />} />
-          </Popover>}
+    <Card bordered className="comment-card">
+      <Space>
+        <Avatar icon={<UserOutlined />} />
+        <div style={{ flex: 1 }}>
+          <Space className="d-flex justify-content-between w-100">
+            <div className="d-flex justify-content-between gap-2">
+              <Text strong>{comment.userId.username}</Text>
+              {isEdited && <Text type="secondary" style={{ marginLeft: 8 }}>({t("Edited")})</Text>}
+              <br />
+              <Text type="secondary">{convertToRelativeTime(comment.createdAt)}</Text>
+            </div>
+            {isAuthenticated && (role === "admin" || comment.userId._id === user.userId) && (
+              <Popover content={optionsContent} trigger="click">
+                <Button style={{ position: "absolute", top: "10px", right: "10px" }} shape="circle" icon={<EllipsisOutlined />} />
+              </Popover>
+            )}
+          </Space>
+          {isEditing ? (
+            <>
+              <Input.TextArea
+                value={newContent}
+                onChange={(e) => setNewContent(e.target.value)}
+                autoSize={{ minRows: 1, maxRows: 3 }}
+                style={{ marginTop: 16 }}
+              />
+              <Space style={{ justifyContent: 'end', width: '100%', marginTop: 8 }}>
+                <Button type="primary" onClick={() => handleEdit(comment._id)}>{t("Save")}</Button>
+                <Button onClick={() => setIsEditing(false)}>{t("Cancel")}</Button>
+              </Space>
+            </>
+          ) : (
+            <Paragraph>{comment.content}</Paragraph>
+          )}
         </div>
-        {isEditing ? (
-          <>
-            <Input.TextArea
-              value={newContent}
-              onChange={(e) => setNewContent(e.target.value)}
-              autoSize={{ minRows: 1, maxRows: 3 }}
-            />
-            <Space className="justify-content-end mt-2">
-              <Button type="primary" onClick={() => handleEdit(comment._id)}>Save</Button>
-              <Button onClick={() => setIsEditing(false)}>Cancel</Button>
-            </Space>
-          </>
-        ) : (
-          <p className="mb-0">{comment.content}</p>
-        )}
-      </div>
-    </div>
+      </Space >
+    </Card>
   );
 };
 
