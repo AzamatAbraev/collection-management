@@ -62,13 +62,6 @@ const AdminItems = () => {
     }
   };
 
-  // const handleEdit = async (id: string) => {
-  //   setIsModalOpen(true);
-  //   setItemId(id);
-  //   const { data } = await request.get(`items/${id}`);
-  //   form.setFieldsValue(data);
-  // }
-
   const handleSubmit = async () => {
     const values = await form.validateFields();
     if (itemId) {

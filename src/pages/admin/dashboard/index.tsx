@@ -27,7 +27,6 @@ const AdminDashboard = () => {
   const { data: comments } = useQuery("adminComments", getAllComments);
   const { data: items } = useQuery("adminItems", getAllItems);
   const { data: collections } = useQuery("adminCollections", getCollections);
-  console.log(comments);
 
   return (
     <div className="dashboard-overview">

@@ -80,7 +80,6 @@ const useCollection = create<CollectionStoreType>()((set, get) => ({
       set({ loading: true });
       await request.delete(`collections/${id}`);
       await get().getUserCollections();
-      // message.info("Collection deleted");
     } finally {
       set({ loading: false });
     }
