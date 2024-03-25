@@ -15,7 +15,7 @@ import artsImage from "../../../assets/art-category.webp"
 import sportsImage from "../../../assets/sports-category.avif"
 import coinsImage from "../../../assets/coins-category.webp"
 import othersImage from "../../../assets/other-category.webp";
-import backgroundImage from "../../../assets/landing-page.jpg"
+import backgroundImage from "../../../assets/home-image.jpg"
 
 interface CategoryNameType {
   [key: string]: string;

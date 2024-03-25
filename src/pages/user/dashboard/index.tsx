@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { useNavigate, Link } from "react-router-dom";
 
-import { Button, Empty, Form, Input, Modal, Select, Skeleton, Space, message } from "antd";
+import { Button, Empty, Form, Input, Modal, Select, Skeleton, Space, Tooltip, message } from "antd";
 import { DeleteOutlined, EditOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 
@@ -121,7 +121,7 @@ const UserDashboard = () => {
 
   return (
     <section className="user">
-      {isLoading ? <LoadingPage /> : <div className="container user__dashboard">
+      {isLoading ? <LoadingPage /> : <div className="container-manual user__dashboard">
         <div className="user__dashboard__header">
           <div className="user__logo">
             <img src={userIcon} alt="User Icon" />
@@ -131,7 +131,7 @@ const UserDashboard = () => {
           <Space className="user__collections__filter">
             <Select
               className="select__filter"
-              style={{ width: 240 }}
+
               onChange={(value) => setCategoryFilter(value)}
               value={categoryFilter}
               options={[
@@ -159,55 +159,55 @@ const UserDashboard = () => {
               ]}
             />
           </Space>
-          <div className="user__controls">
-            <button onClick={() => navigate("/account")} className="user__btn"><img src={settingsIcon} />{t("Settings")}</button>
-            <button onClick={showModal} className="add__btn user__btn"><PlusOutlined style={{ fontSize: "20px" }} /> {t("New-Collection")}</button>
-          </div>
+          <button onClick={() => navigate("/account")} className="user__btn"><img src={settingsIcon} />{t("Settings")}</button>
+          <button onClick={showModal} className="add__btn user__btn"><PlusOutlined style={{ fontSize: "20px" }} /> {t("New-Collection")}</button>
         </div>
-        <table className="collection-table">
-          <thead className="table-dark">
-            <tr>
-              <th>{t("Name")}</th>
-              <th>{t("Description")}</th>
-              <th>{t("Category")}</th>
-              <th>{t("Created")}</th>
-              <th>{t("Actions")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {userCollections?.length > 0 ? userCollections?.map((collection: CollectionType) =>
-              <tr key={collection._id}>
-                <td>{(collection.name)}</td>
-                <td>{collection.description}</td>
-                <td>{t(collection.category)}</td>
-                <td>{convertToReadableDate(collection.createdAt)}</td>
-                <td>
-                  <Space>
-                    <button className="btn btn-primary" onClick={() => handleEdit(collection._id)}>
-                      <EditOutlined />
-                    </button>
-                    <button
-                      className="btn btn-primary"
-                      onClick={() =>
-                        Modal.confirm({
-                          title: "Are you sure you want to delete this collection and all its items?",
-                          async onOk() {
-                            await handleDelete(collection._id);
-                          },
-                        })
-                      }
-                    >
-                      <DeleteOutlined />
-                    </button>
-                    <Link className="btn btn-primary" to={`/collection/${collection._id}`}>
-                      <img src={readmoreIcon} alt="Read More" />
-                    </Link>
-                  </Space>
-                </td>
+        <div className="table-wrapper">
+          <table className="collection-table">
+            <thead className="table-dark">
+              <tr>
+                <th>{t("Name")}</th>
+                <th>{t("Description")}</th>
+                <th>{t("Category")}</th>
+                <th>{t("Created")}</th>
+                <th>{t("Actions")}</th>
               </tr>
-            ) : <Empty />}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {userCollections?.length > 0 ? userCollections?.map((collection: CollectionType) =>
+                <tr key={collection._id}>
+                  <td>{(collection.name)}</td>
+                  <td><Tooltip title={collection.description}>{collection.description.length > 100 ? collection.description?.slice(0, 100) : collection.description}...</Tooltip></td>
+                  <td>{t(collection.category)}</td>
+                  <td>{convertToReadableDate(collection.createdAt)}</td>
+                  <td>
+                    <Space>
+                      <button className="btn btn-primary" onClick={() => handleEdit(collection._id)}>
+                        <EditOutlined />
+                      </button>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() =>
+                          Modal.confirm({
+                            title: "Are you sure you want to delete this collection and all its items?",
+                            async onOk() {
+                              await handleDelete(collection._id);
+                            },
+                          })
+                        }
+                      >
+                        <DeleteOutlined />
+                      </button>
+                      <Link className="btn btn-primary" to={`/collection/${collection._id}`}>
+                        <img src={readmoreIcon} alt="Read More" />
+                      </Link>
+                    </Space>
+                  </td>
+                </tr>
+              ) : <Empty />}
+            </tbody>
+          </table>
+        </div>
       </div>}
       <Modal
         title={selected ? t("Edit") : t("New-Collection")}
