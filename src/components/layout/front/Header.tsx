@@ -23,7 +23,7 @@ const Header = () => {
 
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { role, isAuthenticated, user, language, setLanguage, logout } = useAuth();
+  const { role, isAuthenticated, user, language, setLanguage } = useAuth();
   const { theme, toggleTheme } = useTheme()
 
   const screenSize = useScreenSize();
@@ -106,7 +106,7 @@ const Header = () => {
           unCheckedChildren={<SunOutlined />}
           checked={theme === 'dark'}
           onChange={toggleTheme}
-          className="theme-switch"
+          className="theme-switch mt-2 me-2"
         />
       </li>
       {isAuthenticated ? (
@@ -117,7 +117,7 @@ const Header = () => {
           {role === "admin" ? <li className="nav-item">
             <Link to="/admin/dashboard" className="btn btn-light" >Dashboard</Link>
           </li> : <li className="nav-item">
-            <button className="btn btn-light" onClick={() => logout(navigate)}>{t('Logout')}</button>
+            <Link to="/account" className="btn btn-light">Account</Link>
           </li>}
         </div>
       ) : (

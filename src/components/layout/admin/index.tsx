@@ -16,10 +16,11 @@ import Sider from "antd/es/layout/Sider";
 
 import { Content, Header } from "antd/es/layout/layout";
 
-import "./style.scss";
 import useAuth from "../../../store/auth";
 import useScreenSize from "../../../utils/getScreenSize";
 import { useTranslation } from "react-i18next";
+
+import "./style.scss";
 
 const AdminLayout = () => {
   const { pathname } = useLocation();

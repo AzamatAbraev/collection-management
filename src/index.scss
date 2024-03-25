@@ -8,6 +8,13 @@
   background-color: vrb.$main-dark;
   color: #fff;
 
+  .account-form,
+  .password-form {
+    label {
+      color: #fff;
+    }
+  }
+
   .main-header {
     background-color: vrb.$main-dark;
     border-bottom: 0px;
@@ -30,6 +37,21 @@
     p {
       color: #fff !important;
     }
+  }
+
+  .login-page {
+    background-color: vrb.$main-dark;
+
+    .login__header {
+      h2 {
+        color: #fff;
+      }
+    }
+  }
+
+  .home {
+    background-color: vrb.$main-dark;
+    border: 5px solid #fff;
   }
 }
 

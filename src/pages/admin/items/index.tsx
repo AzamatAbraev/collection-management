@@ -6,7 +6,6 @@ import { DeleteOutlined, EditOutlined, MinusCircleOutlined, PlusOutlined } from 
 import request from '../../../server';
 import CollectionType from '../../../types/collection';
 import useItems from '../../../store/items';
-import ItemType from '../../../types/item';
 
 import notFoundImage from "../../../assets/not-found.png";
 
@@ -51,12 +50,24 @@ const AdminItems = () => {
     }
   }
 
-  const handleEdit = async (id: string) => {
-    setIsModalOpen(true);
-    setItemId(id);
-    const { data } = await request.get(`items/${id}`);
-    form.setFieldsValue(data);
-  }
+  const handleEdit = async () => {
+    if (selectedRowKeys.length === 1) {
+      const id = selectedRowKeys[0];
+      setIsModalOpen(true);
+      setItemId(id.toString());
+      const { data } = await request.get(`items/${id}`);
+      form.setFieldsValue(data);
+    } else {
+      message.error("Please select exactly one collection to edit.");
+    }
+  };
+
+  // const handleEdit = async (id: string) => {
+  //   setIsModalOpen(true);
+  //   setItemId(id);
+  //   const { data } = await request.get(`items/${id}`);
+  //   form.setFieldsValue(data);
+  // }
 
   const handleSubmit = async () => {
     const values = await form.validateFields();
@@ -108,15 +119,6 @@ const AdminItems = () => {
       key: 'userId',
       render: (user: { _id: string, username: string }) => <p>{user.username}</p>
     },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_: string, data: ItemType) => (
-        <Space size="middle">
-          <Button className='d-flex align-items-center' type='primary' onClick={() => handleEdit(data._id)}><EditOutlined />Edit</Button>
-        </Space>
-      ),
-    },
   ];
 
   return (
@@ -125,6 +127,7 @@ const AdminItems = () => {
       <Space className='mb-3'>
         <Input className='collections-search' value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Searching.." />
         <Button className='d-flex align-items-center' type='primary' danger onClick={handleDelete} ><DeleteOutlined />Delete</Button>
+        <Button className='d-flex align-items-center' type='primary' onClick={handleEdit}><EditOutlined />Edit</Button>
       </Space>
       <Table
         columns={columns}

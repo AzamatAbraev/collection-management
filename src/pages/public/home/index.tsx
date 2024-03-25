@@ -15,11 +15,11 @@ import artsImage from "../../../assets/art-category.webp"
 import sportsImage from "../../../assets/sports-category.avif"
 import coinsImage from "../../../assets/coins-category.webp"
 import othersImage from "../../../assets/other-category.webp";
+import backgroundImage from "../../../assets/landing-page.jpg"
 
 interface CategoryNameType {
   [key: string]: string;
 }
-
 
 import './style.scss';
 
@@ -47,6 +47,16 @@ const HomePage = () => {
     <Fragment>
       {isLoading ? <LoadingPage /> : <section id="latest">
         <div className="container">
+          <div className="home home-main">
+            <div className="home-image">
+              <img src={backgroundImage} alt="Collections Image" />
+            </div>
+            <div className="home-content">
+              <h2>{t("Explore our collections")}</h2>
+              <p>{t("Delve into our meticulously curated collections that span from vintage classics to modern marvels")}</p>
+              <Link to="/allcollections">{t("Collections")}</Link>
+            </div>
+          </div>
           <h1 className="fs-1 m-3 fst-bold">{t("Latest-Items")}</h1>
           <HomeCarousel />
           <h1 className="fs-1 m-3 fst-bold">{t("Collections")}</h1>

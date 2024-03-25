@@ -24,7 +24,8 @@ const useAuth = create<AuthType>()((set) => ({
   user: JSON.parse(localStorage.getItem(USER_DATA) || "{}"),
   language: localStorage.getItem("LANGUAGE") || "en",
   setLanguage: (language) => {
-    set({ language });
+    localStorage.setItem("LANGUAGE", language);
+    set(() => ({ language }));
   },
   role: Cookies.get(USER_ROLE) || "",
   login: async (values, navigate) => {

@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { Card, Skeleton, Button, Tooltip } from 'antd';
+import { Card, Button, Tooltip } from 'antd';
 import { LikeFilled, LikeOutlined, MessageOutlined } from '@ant-design/icons';
 
 import bookImg from '../../assets/book.webp';
@@ -15,7 +15,6 @@ const ItemCard = (item: ItemType) => {
   const { user } = useAuth();
   const [liked, setLiked] = useState(item.likes.includes(user.userId));
   const [commented, setCommented] = useState(false);
-  const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { likeItem, unlikeItem } = useItems();
@@ -30,17 +29,6 @@ const ItemCard = (item: ItemType) => {
     }
     queryClient.invalidateQueries("latestItems");
   };
-
-  useEffect(() => {
-    setLoading(true);
-    const timer = setTimeout(() => {
-      setLoading(false)
-    }, 1000)
-
-    return () => {
-      clearTimeout(timer)
-    }
-  }, [])
 
   return (
     <Card
@@ -61,21 +49,19 @@ const ItemCard = (item: ItemType) => {
         <Button onClick={() => setCommented(!commented)} type="text" icon={<MessageOutlined style={{ color: commented ? 'red' : undefined }} />} />,
       ]}
     >
-      <Skeleton loading={loading} active>
-        <Meta
-          title={item.name}
-        />
-        {<p>{item.collectionId.name}</p>}
-        {<p style={{ textTransform: "capitalize" }}>Published by {item.userId.username}</p>}
-        <div className="custom-fields">
-          {item.customValues ? Object.entries(item.customValues).map(([fieldName, fieldValue]) => (
-            <div key={fieldName} className="custom-field">
-              <strong>{fieldName}:</strong> {fieldValue.toString()}
-            </div>
-          )) : <div className="placeholder" style={{ height: '50px' }}></div>}
-        </div>
-        {item?.tags.map((tag, key) => <span key={key} className="badge bg-secondary me-1">#{tag}</span>)}
-      </Skeleton>
+      <Meta
+        title={item.name}
+      />
+      {<p>{item.collectionId.name}</p>}
+      {<p style={{ textTransform: "capitalize" }}>Published by {item.userId.username}</p>}
+      <div className="custom-fields">
+        {item.customValues ? Object.entries(item.customValues).map(([fieldName, fieldValue]) => (
+          <div key={fieldName} className="custom-field">
+            <strong>{fieldName}:</strong> {fieldValue.toString()}
+          </div>
+        )) : <div className="placeholder" style={{ height: '50px' }}></div>}
+      </div>
+      {item?.tags.map((tag, key) => <span key={key} className="badge bg-secondary me-1">#{tag}</span>)}
     </Card>
   );
 };
