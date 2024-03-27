@@ -72,6 +72,27 @@
     rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
 }
 
+@media (max-width: 992px) {
+  .collection__items__row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 650px) {
+  .collection__items__row {
+    grid-template-columns: 1fr;
+  }
+
+  .collection__items__header {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+    p {
+      margin-bottom: 0;
+    }
+  }
+}
+
 .custom-file-upload {
   display: inline-block;
   padding: 6px 12px;

@@ -3,6 +3,7 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import {
   ClockCircleOutlined,
+  HomeOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   ReadOutlined,
@@ -132,6 +133,17 @@ const AdminLayout = () => {
               height: 64,
             }}
           />
+          <Button
+            type="text"
+            onClick={() => navigate("/")}
+            icon={<HomeOutlined />}
+            style={{
+              fontSize: "16px",
+              width: 64,
+              height: 64,
+              color: "#fff"
+            }}
+          >{t("Home")}</Button>
           <Flex align="center" gap={10}>
             <Link to="/dashboard" className="notification">
               <Badge className="dashboard-badge" count={0} size="small">

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Button, Input, Popover, Skeleton, Space } from "antd";
+import { Button, Input, Popover, Skeleton } from "antd";
 import { LikeFilled, LikeOutlined, MessageOutlined } from "@ant-design/icons";
 
 import request from "../../../server";
@@ -123,10 +123,10 @@ const ItemPage = () => {
           <p style={{ color: "blue" }}>#{item?.tags?.join(', #')}</p>
         </div>
         <div className="item__comments">
-          <Space>
+          <div className="d-flex align-items-center gap-1">
             <Input style={{ width: "330px" }} placeholder={t("Write-Comment")} value={commentContent} onChange={(e) => setCommentContent(e.target.value)} />
             <Button onClick={handleAddComment}>{t("Add-Comment")}</Button>
-          </Space>
+          </div>
           <h4 style={{ cursor: "pointer", margin: "10px 0px" }} onClick={() => setSeeComments(!seeComments)}>{seeComments ? t("Hide-Comments") : t("See-Comments")} ({comments?.length || 0})</h4>
           {seeComments && <div className="comments__row">
             {comments?.map((comment: CommentType) => (
