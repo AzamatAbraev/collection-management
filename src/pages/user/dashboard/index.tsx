@@ -293,7 +293,7 @@ const UserDashboard = () => {
             </Form.Item>
             <>
               {customFields.length > 0 && customFields.map((_, index) => (
-                <div key={index} style={{ display: "flex", marginBottom: "8px" }}>
+                <div key={index} style={{ display: "flex", marginBottom: "8px", gap: "10px" }}>
                   <Form.Item
                     name={`fieldName${index}`}
                     rules={[{ required: true, message: "Field name required" }]}

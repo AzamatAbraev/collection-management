@@ -221,7 +221,7 @@ const CollectionPage = () => {
             </div>
           )}
 
-        </div> : <NoDataComponent />}
+        </div> : <div className="nodata__wrapper"><NoDataComponent /></div>}
 
       </div>}
 

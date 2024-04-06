@@ -93,6 +93,13 @@
   }
 }
 
+.nodata__wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
 .custom-file-upload {
   display: inline-block;
   padding: 6px 12px;
