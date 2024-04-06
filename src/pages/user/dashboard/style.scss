@@ -82,12 +82,9 @@
   padding: 10px 20px;
 }
 
-.table-wrapper {
-  overflow-x: auto;
-}
-
 .collection-table {
   margin-top: 20px;
+  width: 100%;
 
   thead {
     background-color: #2975b0;
@@ -154,12 +151,12 @@
   }
 }
 
-// @media (max-width: 800px) {
-//   .table-wrapper {
-//     // width: 100%;
-//     overflow-x: auto;
-//   }
-// }
+@media (max-width: 800px) {
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+}
 
 @media (max-width: 550px) {
   .user__dashboard__header {

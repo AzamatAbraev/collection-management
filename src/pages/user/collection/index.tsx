@@ -307,6 +307,7 @@ const CollectionPage = () => {
                 key={index}
                 name={field.fieldName}
                 label={field.fieldName}
+                valuePropName={field.fieldType === "Boolean" ? "checked" : "value"}
                 rules={[{ required: true, message: `${field.fieldName} is required` }]}
               >
                 {renderInputs(field)}
