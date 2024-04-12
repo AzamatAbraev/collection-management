@@ -42,17 +42,12 @@ const ItemPage = () => {
     return data;
   };
 
-  // const fetchComments = async () => {
-  //   const { data } = await request.get(`items/${itemId}/comments`);
-  //   return data;
-  // };
 
   const { data: item, isLoading } = useQuery("singleItem", fetchSingleItem, {
     onSuccess: (data) => {
       setLiked(data.likes && data.likes.some((likedUser: LikedUserType) => likedUser._id === user.userId));
     }
   });
-  // const { data: comments } = useQuery(["comments", itemId], fetchComments);
 
   useEffect(() => {
     if (item && Array.isArray(item.likes)) {
