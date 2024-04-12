@@ -41,7 +41,7 @@ const AdminCollections = () => {
       Modal.confirm({
         title: "Are you sure that you want to delete selected collections",
         async onOk() {
-          await Promise.all(selectedRowKeys.map((id) => deleteCollection(id.toString())));
+          await Promise.all(selectedRowKeys.map((id) => deleteCollection(id?.toString())));
 
           setSelectedRowKeys([]);
           setTableKey(prevKey => prevKey + 1);
@@ -58,7 +58,7 @@ const AdminCollections = () => {
     if (selectedRowKeys.length === 1) {
       const id = selectedRowKeys[0];
       setIsModalOpen(true);
-      setCollectionId(id.toString());
+      setCollectionId(id?.toString());
       const { data } = await request.get(`collections/${id}`);
       form.setFieldsValue(data);
     } else {

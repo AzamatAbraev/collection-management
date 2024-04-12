@@ -45,7 +45,7 @@ const AdminUsers = () => {
       Modal.confirm({
         title: 'Are you sure you want to delete selected user(s)? This will delete all data associated (collections, items, ..)',
         async onOk() {
-          await Promise.all(selectedRowKeys.map((id) => deleteUser(id.toString())));
+          await Promise.all(selectedRowKeys.map((id) => deleteUser(id?.toString())));
           if (selectedRowKeys.includes(user.userId)) {
             await logout(navigate)
             message.info("Your account has been deleted. Redirecting to register page...");
@@ -66,7 +66,7 @@ const AdminUsers = () => {
       Modal.confirm({
         title: 'Are you sure you want to block selected user(s)?',
         async onOk() {
-          await Promise.all(selectedRowKeys.map((id) => blockUser(id.toString())));
+          await Promise.all(selectedRowKeys.map((id) => blockUser(id?.toString())));
           if (selectedRowKeys.includes(user.userId)) {
             await logout(navigate)
             message.info("Your account has been blocked. Redirecting to register page...");
@@ -87,7 +87,7 @@ const AdminUsers = () => {
       Modal.confirm({
         title: 'Are you sure you want to unblock selected user(s)?',
         async onOk() {
-          await Promise.all(selectedRowKeys.map((id) => unblockUser(id.toString())));
+          await Promise.all(selectedRowKeys.map((id) => unblockUser(id?.toString())));
           setSelectedRowKeys([]);
           setTableKey(prevKey => prevKey + 1);
 

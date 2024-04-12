@@ -3,6 +3,7 @@ interface CommentType {
   createdAt: string;
   updatedAt: string;
   content: string;
+  itemId: string;
   userId: {
     username: string;
     _id: string;

@@ -37,7 +37,7 @@ const AdminItems = () => {
       Modal.confirm({
         title: "Are you sure that you want to delete selected items",
         async onOk() {
-          await Promise.all(selectedRowKeys.map((id) => deleteItem(id.toString())));
+          await Promise.all(selectedRowKeys.map((id) => deleteItem(id?.toString())));
 
           setSelectedRowKeys([]);
           setTableKey(prevKey => prevKey + 1);
@@ -54,7 +54,7 @@ const AdminItems = () => {
     if (selectedRowKeys.length === 1) {
       const id = selectedRowKeys[0];
       setIsModalOpen(true);
-      setItemId(id.toString());
+      setItemId(id?.toString());
       const { data } = await request.get(`items/${id}`);
       form.setFieldsValue(data);
     } else {

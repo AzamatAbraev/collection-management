@@ -15,7 +15,7 @@ import artsImage from "../../../assets/art-category.webp"
 import sportsImage from "../../../assets/sports-category.avif"
 import coinsImage from "../../../assets/coins-category.webp"
 import othersImage from "../../../assets/other-category.webp";
-import backgroundImage from "../../../assets/home-image.jpg"
+import backgroundImage from "../../../assets/main-collection-image.avif"
 
 interface CategoryNameType {
   [key: string]: string;
@@ -26,6 +26,7 @@ import './style.scss';
 const HomePage = () => {
   const { t } = useTranslation();
   const { data: largestCollections, isLoading } = useQuery('largestCollections', getLargestCollections);
+  const [loaded, setLoaded] = React.useState(false);
 
 
   const IconText = ({ icon, text }: { icon: React.FC, text: string }) => (
@@ -45,11 +46,11 @@ const HomePage = () => {
 
   return (
     <Fragment>
-      {isLoading ? <LoadingPage /> : <section id="latest">
+      {isLoading && !loaded ? <LoadingPage /> : <section id="latest">
         <div className="container">
           <div className="home home-main">
             <div className="home-image">
-              <img src={backgroundImage} alt="Collections Image" />
+              <img src={backgroundImage} alt="Collections Image" onLoad={() => setLoaded(true)} />
             </div>
             <div className="home-content">
               <h2>{t("Explore our collections")}</h2>
@@ -70,7 +71,7 @@ const HomePage = () => {
                 className="collection-list-item"
                 key={collection._id}
                 actions={[
-                  <IconText icon={StarFilled} text={collection.itemCount.toString()} key="list-vertical-star-o" />,
+                  <IconText icon={StarFilled} text={collection.itemCount?.toString()} key="list-vertical-star-o" />,
                 ]}
                 extra={<img className="collection-list-image" alt="Collection" src={categoryImages[collection.category] || categoryImages.Others} />}
               >

@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { useQueryClient } from "react-query";
 import useAuth from "../../store/auth";
 import request from "../../server";
-import convertToRelativeTime from "../../utils/timeDifference";
 import CommentType from "../../types/comment";
 import { Avatar, Button, Card, Input, message, Popover, Space, Typography } from "antd";
 import { UserOutlined, EllipsisOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
@@ -11,6 +10,8 @@ import { UserOutlined, EllipsisOutlined, EditOutlined, DeleteOutlined } from "@a
 const { Text, Paragraph } = Typography;
 
 import "./style.scss"
+import convertToReadableDate from "../../utils/convertCommentTime";
+import socket from "../../server/socket";
 
 const CommentCard = (comment: CommentType) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -19,27 +20,30 @@ const CommentCard = (comment: CommentType) => {
   const { isAuthenticated, role, user } = useAuth();
 
   const { t } = useTranslation();
+  
 
   const isEdited = new Date(comment.updatedAt) > new Date(comment.createdAt);
 
   const handleDelete = async (commentId: string) => {
     await request.delete(`items/comments/${commentId}`);
+    await socket.emit("deleteComment", commentId);
     queryClient.invalidateQueries("comments");
   };
 
   const handleEdit = async (commentId: string) => {
     if (!newContent.trim()) {
-      message.error(t("Validation"));
+      message.error(t("Validation")); 
       return;
     }
     await request.patch(`items/comments/${commentId}`, { content: newContent });
+    await socket.emit("editComment", commentId, newContent);
     setIsEditing(false);
     queryClient.invalidateQueries("comments");
-  };
+  };  
 
   const optionsContent = (
     <Space direction="vertical">
-      {isAuthenticated && (role === "admin" || comment.userId._id === user.userId) && (
+      {isAuthenticated && (role === "admin" || comment.userId?._id === user?.userId) && (
         <>
           {!isEditing && (
             <>
@@ -59,10 +63,10 @@ const CommentCard = (comment: CommentType) => {
         <div style={{ flex: 1 }}>
           <Space className="d-flex justify-content-between w-100">
             <div className="d-flex justify-content-between gap-2">
-              <Text strong>{comment.userId.username}</Text>
+              <Text strong>{comment?.userId.username}</Text>
               {isEdited && <Text type="secondary" style={{ marginLeft: 8 }}>({t("Edited")})</Text>}
               <br />
-              <Text type="secondary">{convertToRelativeTime(comment.createdAt)}</Text>
+              <Text type="secondary">{convertToReadableDate(comment.createdAt)}</Text>
             </div>
             {isAuthenticated && (role === "admin" || comment.userId._id === user.userId) && (
               <Popover content={optionsContent} trigger="click">

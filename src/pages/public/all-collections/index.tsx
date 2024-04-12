@@ -44,7 +44,7 @@ const AllCollections = () => {
     const params = new URLSearchParams();
     if (search) params.set("search", search);
     if (category) params.set("category", category);
-    navigate({ search: params.toString() }, { replace: true });
+    navigate({ search: params?.toString() }, { replace: true });
   }, [search, category, navigate]);
 
   const categoryImages: CategoryNameType = {

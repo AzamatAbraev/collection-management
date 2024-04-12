@@ -57,7 +57,7 @@ const ItemCard = (item: ItemType) => {
       <div className="custom-fields">
         {item.customValues ? Object.entries(item.customValues).map(([fieldName, fieldValue]) => (
           <div key={fieldName} className="custom-field">
-            <strong>{fieldName}:</strong> {fieldValue.toString()}
+            <strong>{fieldName}:</strong> {fieldValue?.toString()}
           </div>
         )) : <div className="placeholder" style={{ height: '50px' }}></div>}
       </div>

@@ -191,7 +191,7 @@ const CollectionPage = () => {
                   <div className="item-custom-fields">
                     {Object.entries(item.customValues).map(([fieldName, fieldValue]) => (
                       <div key={fieldName} className="custom-field">
-                        <strong>{fieldName}:</strong> {fieldValue.toString()}
+                        <strong>{fieldName}:</strong> {fieldValue?.toString()}
                       </div>
                     ))}
                   </div>

@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { Button, Input, Popover, Skeleton } from "antd";
 import { LikeFilled, LikeOutlined, MessageOutlined } from "@ant-design/icons";
 
+
 import request from "../../../server";
 import CommentCard from "../../../components/comment";
 import CommentType from "../../../types/comment";
@@ -14,6 +15,7 @@ import useItems from "../../../store/items";
 import useAuth from "../../../store/auth";
 import LoadingPage from "../../loading";
 import { useTranslation } from "react-i18next";
+import socket from "../../../server/socket";
 
 interface LikedUserType {
   _id: string,
@@ -24,30 +26,33 @@ const ItemPage = () => {
   const { itemId } = useParams();
   const [commentContent, setCommentContent] = useState("");
   const [seeComments, setSeeComments] = useState(true);
+  const [liked, setLiked] = useState(false);
+  const [addedComments, setAddedComments] = useState<CommentType[]>([]);
+
+
 
   const queryClient = useQueryClient();
   const { likeItem, unlikeItem } = useItems();
   const { user } = useAuth()
   const { t } = useTranslation()
 
+
   const fetchSingleItem = async () => {
     const { data } = await request.get(`items/${itemId}`);
     return data;
   };
 
-  const fetchComments = async () => {
-    const { data } = await request.get(`items/${itemId}/comments`);
-    return data;
-  };
+  // const fetchComments = async () => {
+  //   const { data } = await request.get(`items/${itemId}/comments`);
+  //   return data;
+  // };
 
   const { data: item, isLoading } = useQuery("singleItem", fetchSingleItem, {
     onSuccess: (data) => {
       setLiked(data.likes && data.likes.some((likedUser: LikedUserType) => likedUser._id === user.userId));
     }
   });
-  const { data: comments } = useQuery(["comments", itemId], fetchComments);
-
-  const [liked, setLiked] = useState(false)
+  // const { data: comments } = useQuery(["comments", itemId], fetchComments);
 
   useEffect(() => {
     if (item && Array.isArray(item.likes)) {
@@ -55,11 +60,39 @@ const ItemPage = () => {
     }
   }, [item, user.userId]);
 
+  useEffect(() => {
+    const fetchComments = async () => {
+      const { data } = await request.get<CommentType[]>(`items/${itemId}/comments`);
+      setAddedComments(data);
+    };
+    fetchComments();
+
+    socket.on("receiveComment", (newComment: CommentType) => {
+      if (newComment.itemId === itemId) {
+        setAddedComments((prevComments) => [...prevComments, newComment]);
+      }
+    });
+
+    socket.on("commentUpdated", (updatedComment: CommentType) => {
+      setAddedComments(prev => prev.map(comment => comment._id === updatedComment._id ? updatedComment : comment));
+    });
+
+    socket.on("commentDeleted", (deletedCommentId: string) => {
+      setAddedComments(prev => prev.filter(comment => comment._id !== deletedCommentId));
+    });
+
+    return () => {
+      socket.off("receiveComment");
+    };
+  }, [itemId]);
+  
+
 
   const handleAddComment = async () => {
     if (commentContent) {
       await request.post(`items/${itemId}/comments`, { content: commentContent });
     }
+    socket.emit("newComment", {content: commentContent});
     setCommentContent('');
     queryClient.invalidateQueries("comments");
   };
@@ -86,6 +119,8 @@ const ItemPage = () => {
       <p>{lastLikerUsername} liked this item.</p> :
       <p>{lastLikerUsername} and {totalLikes - 1} others liked this item.</p>;
   })();
+
+  
 
   if (!item || !item.likes) return <LoadingPage />
 
@@ -127,9 +162,9 @@ const ItemPage = () => {
             <Input style={{ width: "330px" }} placeholder={t("Write-Comment")} value={commentContent} onChange={(e) => setCommentContent(e.target.value)} />
             <Button onClick={handleAddComment}>{t("Add-Comment")}</Button>
           </div>
-          <h4 style={{ cursor: "pointer", margin: "10px 0px" }} onClick={() => setSeeComments(!seeComments)}>{seeComments ? t("Hide-Comments") : t("See-Comments")} ({comments?.length || 0})</h4>
+          <h4 style={{ cursor: "pointer", margin: "10px 0px" }} onClick={() => setSeeComments(!seeComments)}>{seeComments ? t("Hide-Comments") : t("See-Comments")} ({addedComments?.length || 0})</h4>
           {seeComments && <div className="comments__row">
-            {comments?.map((comment: CommentType) => (
+            {addedComments?.map((comment: CommentType) => (
               <CommentCard key={comment._id} {...comment} />
             ))}
           </div>}

@@ -14,11 +14,13 @@
   "dependencies": {
     "@ant-design/icons": "^5.3.3",
     "@types/js-cookie": "^3.0.6",
+    "@types/node": "^20.12.7",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-slick": "^0.23.13",
     "antd": "^5.15.2",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.3",
+    "dotenv": "^16.4.5",
     "formik": "^2.4.5",
     "i18next": "^23.10.1",
     "i18next-browser-languagedetector": "^7.2.0",
@@ -32,6 +34,7 @@
     "react-slick": "^0.30.2",
     "sass": "^1.71.1",
     "slick-carousel": "^1.8.1",
+    "socket.io-client": "^4.7.5",
     "ts-node": "^10.9.2",
     "yup": "^1.4.0",
     "zustand": "^4.5.2"
