@@ -3,6 +3,8 @@ import { useFormik } from "formik";
 import LoginSchema from "../../../schemas/login";
 import useAuth from "../../../store/auth";
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet";
+
 
 
 import "./style.scss"
@@ -24,6 +26,10 @@ const LoginPage = () => {
   });
   return (
     <section className="login-page">
+      <Helmet>
+        <title>Login</title>
+        <meta name="Login" content="Sign in to use all features of our website" />
+      </Helmet>
       <div className="login__main">
         <div className="login__header">
           <h2>{t("Login")}</h2>

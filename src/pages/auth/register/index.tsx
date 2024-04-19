@@ -5,6 +5,7 @@ import useAuth from "../../../store/auth";
 import { useFormik } from "formik";
 import RegisterSchema from "../../../schemas/register";
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet";
 
 const RegisterPage = () => {
 
@@ -26,6 +27,10 @@ const RegisterPage = () => {
 
   return (
     <section className="login-page">
+      <Helmet>
+        <title>Register</title>
+        <meta name="Register" content="Registration to use all features of our website" />
+      </Helmet>
       <div className="login__main">
         <div className="login__header">
           <h2>{t("Register")}</h2>

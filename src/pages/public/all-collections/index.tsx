@@ -19,6 +19,7 @@ interface CategoryNameType {
 const { Option } = Select;
 
 import "./style.scss"
+import { Helmet } from "react-helmet";
 
 const AllCollections = () => {
   const location = useLocation();
@@ -57,6 +58,9 @@ const AllCollections = () => {
 
   return (
     <section id="allcollections" style={{ padding: "2rem 0" }}>
+      <Helmet>
+        <title>Collections</title>
+      </Helmet>
       <div className="container">
         <Row gutter={[16, 16]} className="mb-3">
           <Col span={12}>

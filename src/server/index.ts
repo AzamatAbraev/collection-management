@@ -6,6 +6,7 @@ import { message } from "antd";
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
+  // baseURL: "http://localhost:3000/api/v1/",
   timeout: 15000,
   headers: { Authorization: `Bearer ${Cookies.get(TOKEN)}` },
 });

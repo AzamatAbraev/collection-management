@@ -15,6 +15,7 @@ import useItems from "../../../store/items";
 import { useTranslation } from "react-i18next";
 
 import "./style.scss";
+import { Helmet } from "react-helmet";
 
 interface CustomField {
   fieldName: string;
@@ -56,6 +57,10 @@ const CollectionPage = () => {
 
   const handleOk = async () => {
     const values = await form.validateFields();
+    
+    if (selectedFile) {
+      values.photo = selectedFile;
+    }
 
     const customValues: { [key: string]: string; } = {};
 
@@ -66,13 +71,10 @@ const CollectionPage = () => {
       delete values[field.fieldName];
     });
 
-    if (selectedFile) {
-      values.photo = selectedFile;
-    }
-
     const payload = {
       ...values, customValues
     }
+
 
     if (!selected) {
       await addItem(payload, collectionId);
@@ -161,8 +163,12 @@ const CollectionPage = () => {
     }
   }
 
+
   return (
     <Fragment>
+      <Helmet>
+        <title>Items</title>
+      </Helmet>
       {loading ? <LoadingPage /> : <div className="container collection__items">
         <div className="collection__items__header">
           <p className="collection__items__title">{collectionName}</p>

@@ -20,6 +20,7 @@ import convertToReadableDate from "../../../utils/convertCommentTime";
 import "./style.scss";
 import LoadingPage from "../../loading";
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet";
 
 interface CustomFieldType {
   fieldName: string,
@@ -121,6 +122,9 @@ const UserDashboard = () => {
 
   return (
     <section className="user">
+      <Helmet>
+        <title>Dashboard</title>
+      </Helmet>
       {isLoading ? <LoadingPage /> : <div className="container-manual user__dashboard">
         <div className="user__dashboard__header">
           <div className="user__logo">
