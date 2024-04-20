@@ -50,7 +50,7 @@ const HomePage = () => {
         <div className="container">
           <div className="home home-main">
             <div className="home-image">
-              <img src={backgroundImage} alt="Collections Image" onLoad={() => setLoaded(true)} />
+              <img src={backgroundImage} alt="Collections Image" loading="eager" onLoad={() => setLoaded(true)} />
             </div>
             <div className="home-content">
               <h2>{t("Explore our collections")}</h2>

@@ -124,6 +124,7 @@ const UserDashboard = () => {
     <section className="user">
       <Helmet>
         <title>Dashboard</title>
+        <meta name="Dashboard" content="Admin Dashboard" />
       </Helmet>
       {isLoading ? <LoadingPage /> : <div className="container-manual user__dashboard">
         <div className="user__dashboard__header">

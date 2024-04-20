@@ -16,6 +16,7 @@ import useAuth from "../../../store/auth";
 import LoadingPage from "../../loading";
 import { useTranslation } from "react-i18next";
 import socket from "../../../server/socket";
+import { Helmet } from "react-helmet";
 
 interface LikedUserType {
   _id: string,
@@ -122,6 +123,10 @@ const ItemPage = () => {
 
   return (
     <div className="item__container item">
+      <Helmet>
+        <title>{item?.name}</title>
+        <meta name={item?.name} content={`${item?.name} is a part of collection ${item?.collection?.name}`} />
+      </Helmet>
       <Skeleton loading={isLoading}>
         <div className="item__content">
           <div className="item__image">
