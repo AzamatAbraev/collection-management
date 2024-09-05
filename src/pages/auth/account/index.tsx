@@ -1,13 +1,13 @@
+import { LogoutOutlined } from '@ant-design/icons';
+import { Button, Divider, Form, Input, Modal, Select, message } from 'antd';
+import i18n from 'i18next';
 import { useEffect, useState } from 'react';
-import { Form, Input, Button, Select, message, Divider, Modal } from 'antd';
-import request from '../../../server';
-import useAuth from '../../../store/auth';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import request from '../../../server';
+import useAuth from '../../../store/auth';
 import useTheme from '../../../store/theme';
-import { LogoutOutlined } from '@ant-design/icons';
-import i18n from 'i18next';
-import { useTranslation } from 'react-i18next';
 
 interface PasswordChangeType { currentPassword: string, newPassword: string }
 interface UserUpdateType {

@@ -1,13 +1,13 @@
-import { Link } from "react-router-dom";
-import { Modal, message } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Modal, message } from "antd";
+import { Link } from "react-router-dom";
 
+import request from "../../server";
 import useCollection from "../../store/collections";
 import CollectionType from "../../types/collection";
 import convertTime from "../../utils/convertTime";
-import request from "../../server";
 
-import readmoreIcon from "../../assets/read-more.svg"
+import readmoreIcon from "../../assets/read-more.svg";
 
 import "./style.scss";
 

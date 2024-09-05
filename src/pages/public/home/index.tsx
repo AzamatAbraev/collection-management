@@ -1,21 +1,20 @@
-import React from "react"
-import { List } from 'antd';
 import { StarFilled } from '@ant-design/icons';
-import { Fragment } from 'react';
+import { List } from 'antd';
+import React, { Fragment } from "react";
+import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
+import { Link } from 'react-router-dom';
 import { getLargestCollections } from '../../../api/collections';
 import HomeCarousel from '../../../components/carousel';
-import LoadingPage from '../../loading';
-import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import CollectionType from '../../../types/collection';
+import LoadingPage from '../../loading';
 
-import booksImage from "../../../assets/books-category.webp"
-import artsImage from "../../../assets/art-category.webp"
-import sportsImage from "../../../assets/sports-category.avif"
-import coinsImage from "../../../assets/coins-category.webp"
+import artsImage from "../../../assets/art-category.webp";
+import booksImage from "../../../assets/books-category.webp";
+import coinsImage from "../../../assets/coins-category.webp";
+import backgroundImage from "../../../assets/main-collection-image.avif";
 import othersImage from "../../../assets/other-category.webp";
-import backgroundImage from "../../../assets/main-collection-image.avif"
+import sportsImage from "../../../assets/sports-category.avif";
 
 interface CategoryNameType {
   [key: string]: string;
@@ -26,7 +25,6 @@ import './style.scss';
 const HomePage = () => {
   const { t } = useTranslation();
   const { data: largestCollections, isLoading } = useQuery('largestCollections', getLargestCollections);
-  const [loaded, setLoaded] = React.useState(false);
 
 
   const IconText = ({ icon, text }: { icon: React.FC, text: string }) => (
@@ -46,11 +44,11 @@ const HomePage = () => {
 
   return (
     <Fragment>
-      {isLoading && !loaded ? <LoadingPage /> : <section id="latest">
+      {isLoading ? <LoadingPage /> : <section id="latest">
         <div className="container">
           <div className="home home-main">
             <div className="home-image">
-              <img src={backgroundImage} alt="Collections Image" loading="eager" onLoad={() => setLoaded(true)} />
+              <img src={backgroundImage} alt="Collections Image" loading="eager" />
             </div>
             <div className="home-content">
               <h2>{t("Explore our collections")}</h2>

@@ -1,9 +1,9 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom";
 import CollectionType from "../../types/collection";
 
-import bookImg from "../../assets/book.webp"
+import bookImg from "../../assets/book.webp";
 
-import "./style.scss"
+import "./style.scss";
 
 const CollectionCard = (collection: CollectionType) => {
   const navigate = useNavigate();

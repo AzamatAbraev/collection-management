@@ -1,15 +1,15 @@
+import { Button, Form, Input, message, Modal, Select, Space, Table, Tooltip } from 'antd';
 import { useState } from 'react';
-import { Table, Button, Modal, Form, Input, Space, message, Select, Tooltip } from 'antd';
 import { useQuery, useQueryClient } from 'react-query';
 
-import request from '../../../server';
-import CollectionType from '../../../types/collection';
-import useCollection from '../../../store/collections';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import request from '../../../server';
+import useCollection from '../../../store/collections';
+import CollectionType from '../../../types/collection';
 
 import { useTranslation } from 'react-i18next';
 
-import "./style.scss"
+import "./style.scss";
 
 const AdminCollections = () => {
   const queryClient = useQueryClient();

@@ -1,25 +1,25 @@
-import { useEffect, useState } from "react";
 import { Card, Col, Input, Row, Select, Spin, Tooltip } from "antd";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 
 import request from "../../../server";
 import CollectionType from "../../../types/collection";
 
-import booksImage from "../../../assets/books-category.webp"
-import artsImage from "../../../assets/art-category.webp"
-import sportsImage from "../../../assets/sports-category.avif"
-import coinsImage from "../../../assets/coins-category.webp"
+import artsImage from "../../../assets/art-category.webp";
+import booksImage from "../../../assets/books-category.webp";
+import coinsImage from "../../../assets/coins-category.webp";
 import othersImage from "../../../assets/other-category.webp";
+import sportsImage from "../../../assets/sports-category.avif";
 
 interface CategoryNameType {
   [key: string]: string;
 }
 const { Option } = Select;
 
-import "./style.scss"
 import { Helmet } from "react-helmet";
+import "./style.scss";
 
 const AllCollections = () => {
   const location = useLocation();

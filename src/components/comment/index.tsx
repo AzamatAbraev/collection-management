@@ -1,17 +1,17 @@
+import { DeleteOutlined, EditOutlined, EllipsisOutlined, UserOutlined } from "@ant-design/icons";
+import { Avatar, Button, Card, Input, message, Popover, Space, Typography } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "react-query";
-import useAuth from "../../store/auth";
 import request from "../../server";
+import useAuth from "../../store/auth";
 import CommentType from "../../types/comment";
-import { Avatar, Button, Card, Input, message, Popover, Space, Typography } from "antd";
-import { UserOutlined, EllipsisOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 const { Text, Paragraph } = Typography;
 
-import "./style.scss"
-import convertToReadableDate from "../../utils/convertCommentTime";
 import socket from "../../server/socket";
+import convertToReadableDate from "../../utils/convertCommentTime";
+import "./style.scss";
 
 const CommentCard = (comment: CommentType) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -20,7 +20,7 @@ const CommentCard = (comment: CommentType) => {
   const { isAuthenticated, role, user } = useAuth();
 
   const { t } = useTranslation();
-  
+
 
   const isEdited = new Date(comment.updatedAt) > new Date(comment.createdAt);
 
@@ -32,14 +32,14 @@ const CommentCard = (comment: CommentType) => {
 
   const handleEdit = async (commentId: string) => {
     if (!newContent.trim()) {
-      message.error(t("Validation")); 
+      message.error(t("Validation"));
       return;
     }
     await request.patch(`items/comments/${commentId}`, { content: newContent });
     await socket.emit("editComment", commentId, newContent);
     setIsEditing(false);
     queryClient.invalidateQueries("comments");
-  };  
+  };
 
   const optionsContent = (
     <Space direction="vertical">

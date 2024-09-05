@@ -1,23 +1,23 @@
+import { LikeFilled, LikeOutlined, MessageOutlined } from "@ant-design/icons";
+import { Button, Input, Popover, Skeleton } from "antd";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Button, Input, Popover, Skeleton } from "antd";
-import { LikeFilled, LikeOutlined, MessageOutlined } from "@ant-design/icons";
 
 
-import request from "../../../server";
+import bookImage from "../../../assets/book.webp";
 import CommentCard from "../../../components/comment";
+import request from "../../../server";
 import CommentType from "../../../types/comment";
-import bookImage from "../../../assets/book.webp"
 
-import useItems from "../../../store/items";
-import useAuth from "../../../store/auth";
-import LoadingPage from "../../loading";
+import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 import socket from "../../../server/socket";
-import { Helmet } from "react-helmet";
+import useAuth from "../../../store/auth";
+import useItems from "../../../store/items";
+import LoadingPage from "../../loading";
 
-import "./style.scss"
+import "./style.scss";
 
 interface LikedUserType {
   _id: string,
@@ -108,7 +108,7 @@ const ItemPage = () => {
   }
 
   useEffect(() => {
-    
+
   }, [itemId, queryClient]);
 
   const likeContent = (() => {

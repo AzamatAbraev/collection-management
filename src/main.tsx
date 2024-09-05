@@ -7,8 +7,8 @@ import App from './App.tsx';
 import './languages/i18n.ts';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './index.scss'
 import { Helmet } from 'react-helmet';
+import './index.scss';
 
 const queryClient = new QueryClient();
 

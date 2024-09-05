@@ -11,15 +11,15 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 
-import { Layout, Menu, Button, Modal, Badge, Flex } from "antd";
+import { Badge, Button, Flex, Layout, Menu, Modal } from "antd";
 
 import Sider from "antd/es/layout/Sider";
 
 import { Content, Header } from "antd/es/layout/layout";
 
+import { useTranslation } from "react-i18next";
 import useAuth from "../../../store/auth";
 import useScreenSize from "../../../utils/getScreenSize";
-import { useTranslation } from "react-i18next";
 
 import "./style.scss";
 

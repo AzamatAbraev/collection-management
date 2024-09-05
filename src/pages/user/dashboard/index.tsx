@@ -1,26 +1,26 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import { Button, Empty, Form, Input, Modal, Select, Skeleton, Space, Tooltip, message } from "antd";
 import { DeleteOutlined, EditOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Empty, Form, Input, Modal, Select, Skeleton, Space, Tooltip, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 
+import { getUserCollections } from "../../../api/collections";
 import request from "../../../server";
 import useAuth from "../../../store/auth";
 import useCollection from "../../../store/collections";
-import { getUserCollections } from "../../../api/collections";
 import CollectionType from "../../../types/collection";
 
-import readmoreIcon from "../../../assets/read-more.svg"
-import settingsIcon from "../../../assets/settins-icon.svg"
-import userIcon from "../../../assets/user-icon.svg"
+import readmoreIcon from "../../../assets/read-more.svg";
+import settingsIcon from "../../../assets/settins-icon.svg";
+import userIcon from "../../../assets/user-icon.svg";
 import convertToReadableDate from "../../../utils/convertCommentTime";
 
-import "./style.scss";
-import LoadingPage from "../../loading";
-import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
+import LoadingPage from "../../loading";
+import "./style.scss";
 
 interface CustomFieldType {
   fieldName: string,

@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { Table, Button, Modal, Form, Input, Space, message } from 'antd';
-import { useQuery, useQueryClient } from 'react-query';
 import { DeleteOutlined, EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Modal, Space, Table, message } from 'antd';
+import { useState } from 'react';
+import { useQuery, useQueryClient } from 'react-query';
 
 import request from '../../../server';
-import CollectionType from '../../../types/collection';
 import useItems from '../../../store/items';
+import CollectionType from '../../../types/collection';
 
 import notFoundImage from "../../../assets/not-found.png";
 

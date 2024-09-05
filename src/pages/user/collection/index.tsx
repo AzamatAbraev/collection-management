@@ -1,21 +1,21 @@
-import { Fragment, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
 import { LikeFilled, LikeOutlined, MessageOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Checkbox, DatePicker, Form, Input, InputNumber, Modal, Skeleton, Space, message } from "antd";
+import { Fragment, useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
-import request from "../../../server";
 import bookImg from "../../../assets/book.webp";
+import request from "../../../server";
 
-import LoadingPage from "../../loading";
-import ItemType from "../../../types/item";
 import NoDataComponent from "../../../components/no-data-found";
 import useAuth from "../../../store/auth";
 import useItems from "../../../store/items";
+import ItemType from "../../../types/item";
+import LoadingPage from "../../loading";
 
 import { useTranslation } from "react-i18next";
 
-import "./style.scss";
 import { Helmet } from "react-helmet";
+import "./style.scss";
 
 interface CustomField {
   fieldName: string;
@@ -57,7 +57,7 @@ const CollectionPage = () => {
 
   const handleOk = async () => {
     const values = await form.validateFields();
-    
+
     if (selectedFile) {
       values.photo = selectedFile;
     }

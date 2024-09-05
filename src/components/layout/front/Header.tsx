@@ -1,20 +1,20 @@
-import { Fragment, useEffect, useState } from "react";
-import { NavLink, useNavigate, Link } from "react-router-dom";
 import { AutoComplete, Switch } from "antd";
+import { Fragment, useEffect, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
-import useAuth from "../../../store/auth";
-import request from "../../../server";
-import ItemType from "../../../types/item";
-import CollectionType from "../../../types/collection";
-import { useTranslation } from "react-i18next";
 import i18n from 'i18next';
+import { useTranslation } from "react-i18next";
+import request from "../../../server";
+import useAuth from "../../../store/auth";
+import CollectionType from "../../../types/collection";
+import ItemType from "../../../types/item";
 
 import menuIcon from "../../../assets/menu-icon.svg";
 
-import "./Header.scss"
-import useScreenSize from "../../../utils/getScreenSize";
-import useTheme from "../../../store/theme";
 import { MoonOutlined, SunOutlined } from "@ant-design/icons";
+import useTheme from "../../../store/theme";
+import useScreenSize from "../../../utils/getScreenSize";
+import "./Header.scss";
 
 
 const Header = () => {

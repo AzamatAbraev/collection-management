@@ -1,11 +1,11 @@
-import { Link } from "react-router-dom";
-import CollectionType from "../../types/collection";
-import convertTime from "../../utils/convertTime";
-import useCollection from "../../store/collections";
 import { Skeleton } from "antd";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import useCollection from "../../store/collections";
+import CollectionType from "../../types/collection";
+import convertTime from "../../utils/convertTime";
 
-import "./style.scss"
+import "./style.scss";
 
 const CollectionListCard = (collection: CollectionType) => {
   const { loading } = useCollection();

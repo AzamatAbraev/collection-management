@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Button, Form, Input, Modal, Skeleton, Space, Table, TableProps, Tag, message } from 'antd';
-import { useQuery, useQueryClient } from 'react-query';
 import { DeleteOutlined, EditOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Modal, Skeleton, Space, Table, TableProps, Tag, message } from 'antd';
+import React, { useState } from 'react';
+import { useQuery, useQueryClient } from 'react-query';
 
 import request from '../../../server';
 import convertTime from '../../../utils/convertTime';
@@ -9,10 +9,10 @@ import convertTime from '../../../utils/convertTime';
 import useUsersFunctions from '../../../store/users';
 import UserType from '../../../types/user';
 
-import "./style.scss";
-import useAuth from '../../../store/auth';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import useAuth from '../../../store/auth';
+import "./style.scss";
 
 const AdminUsers = () => {
   const queryClient = useQueryClient();

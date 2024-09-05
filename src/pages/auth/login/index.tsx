@@ -1,13 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
+import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
 import LoginSchema from "../../../schemas/login";
 import useAuth from "../../../store/auth";
-import { useTranslation } from "react-i18next";
-import { Helmet } from "react-helmet";
 
-
-
-import "./style.scss"
+import "./style.scss";
 
 const LoginPage = () => {
   const { login } = useAuth()

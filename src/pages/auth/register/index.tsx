@@ -1,11 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 
-import "./style.scss"
-import useAuth from "../../../store/auth";
 import { useFormik } from "formik";
-import RegisterSchema from "../../../schemas/register";
-import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
+import RegisterSchema from "../../../schemas/register";
+import useAuth from "../../../store/auth";
+import "./style.scss";
 
 const RegisterPage = () => {
 

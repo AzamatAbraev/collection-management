@@ -1,12 +1,12 @@
-import { useQuery } from "react-query";
 import { Skeleton } from "antd";
+import { useQuery } from "react-query";
 import Slider from "react-slick";
 
 import { getLatestItems } from "../../api/items";
-import ItemCard from "../card/ItemCard";
 import ItemType from "../../types/item";
+import ItemCard from "../card/ItemCard";
 
-import "./style.scss"
+import "./style.scss";
 
 function Responsive() {
   const settings = {

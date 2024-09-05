@@ -1,26 +1,26 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 
+import AdminLayout from "./components/layout/admin"
 import FrontLayout from "./components/layout/front"
-import HomePage from "./pages/public/home"
+import AdminCollections from "./pages/admin/collections"
+import AdminDashboard from "./pages/admin/dashboard"
+import AdminUsers from "./pages/admin/users"
 import LoginPage from "./pages/auth/login"
 import RegisterPage from "./pages/auth/register"
+import NotFoundPage from "./pages/not-found"
 import AllCollections from "./pages/public/all-collections"
 import ContactPage from "./pages/public/contact"
-import AdminDashboard from "./pages/admin/dashboard"
-import AdminLayout from "./components/layout/admin"
-import AdminCollections from "./pages/admin/collections"
-import AdminUsers from "./pages/admin/users"
-import UserDashboard from "./pages/user/dashboard"
+import HomePage from "./pages/public/home"
 import CollectionPage from "./pages/user/collection"
+import UserDashboard from "./pages/user/dashboard"
 import ItemPage from "./pages/user/item"
-import NotFoundPage from "./pages/not-found"
 
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick-theme.css"
+import "slick-carousel/slick/slick.css"
 
-import useAuth from "./store/auth"
-import AccountPage from "./pages/auth/account"
 import AdminItems from "./pages/admin/items"
+import AccountPage from "./pages/auth/account"
+import useAuth from "./store/auth"
 
 function App() {
   const { isAuthenticated, role } = useAuth();
