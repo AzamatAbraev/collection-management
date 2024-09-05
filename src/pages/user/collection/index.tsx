@@ -79,7 +79,7 @@ const CollectionPage = () => {
     if (!selected) {
       await addItem(payload, collectionId);
     } else {
-      await updateItem(selected, values)
+      await updateItem(selected, values);
     }
     setOpen(false);
     setSelected(null);
@@ -128,7 +128,6 @@ const CollectionPage = () => {
     const { data } = await request.post("upload", imageData);
     setSelectedFile(data);
   }
-
 
   useEffect(() => {
     const getCollection = async () => {
@@ -269,7 +268,7 @@ const CollectionPage = () => {
               </label>
               {selectedFile && (
                 <div style={{ marginTop: 10 }}>
-                  <img src={selectedFile} alt="Uploaded" style={{ width: "100%", height: "250px", objectFit: "cover" }} />
+                  <img src={selectedFile || bookImg} alt="Uploaded" style={{ width: "100%", height: "250px", objectFit: "cover" }} />
                 </div>
               )}
             </Form.Item>

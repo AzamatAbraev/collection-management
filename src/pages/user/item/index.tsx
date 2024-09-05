@@ -10,13 +10,14 @@ import CommentCard from "../../../components/comment";
 import CommentType from "../../../types/comment";
 import bookImage from "../../../assets/book.webp"
 
-import "./style.scss"
 import useItems from "../../../store/items";
 import useAuth from "../../../store/auth";
 import LoadingPage from "../../loading";
 import { useTranslation } from "react-i18next";
 import socket from "../../../server/socket";
 import { Helmet } from "react-helmet";
+
+import "./style.scss"
 
 interface LikedUserType {
   _id: string,
@@ -29,8 +30,6 @@ const ItemPage = () => {
   const [seeComments, setSeeComments] = useState(true);
   const [liked, setLiked] = useState(false);
   const [addedComments, setAddedComments] = useState<CommentType[]>([]);
-
-
 
   const queryClient = useQueryClient();
   const { likeItem, unlikeItem } = useItems();
@@ -79,30 +78,38 @@ const ItemPage = () => {
 
     return () => {
       socket.off("receiveComment");
+      socket.off("commentUpdated");
+      socket.off("commentDeleted");
     };
   }, [itemId]);
-  
+
+
 
 
   const handleAddComment = async () => {
     if (commentContent) {
       await request.post(`items/${itemId}/comments`, { content: commentContent });
     }
-    socket.emit("newComment", {content: commentContent});
+    socket.emit("newComment", { content: commentContent });
     setCommentContent('');
     queryClient.invalidateQueries("comments");
   };
 
   const handleLikeClick = async () => {
+    setLiked(!liked);
     if (liked) {
       await unlikeItem(item._id)
-      setLiked(false)
+      socket.emit("unlikeItem", item._id)
     } else {
       await likeItem(item._id);
-      setLiked(true)
+      socket.emit("likeItem", item._id)
     }
     queryClient.invalidateQueries("singleItem")
   }
+
+  useEffect(() => {
+    
+  }, [itemId, queryClient]);
 
   const likeContent = (() => {
     if (!item || !item.likes) return <p>No one has liked this item yet.</p>;
@@ -116,7 +123,7 @@ const ItemPage = () => {
       <p>{lastLikerUsername} and {totalLikes - 1} others liked this item.</p>;
   })();
 
-  
+
 
   if (!item || !item.likes) return <LoadingPage />
 
